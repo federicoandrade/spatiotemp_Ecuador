@@ -1,0 +1,1 @@
+# spatiotemp_Ecuador
