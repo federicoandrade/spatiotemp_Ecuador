@@ -40,11 +40,11 @@ eg2019 <- read_sav("Data/Egresos_hospitalarios2019.sav")
 #Capture variable names for 2011- 2015
 #######################################
 
-capture.output(names(eg2015), file = "variables2015.txt")
-capture.output(names(eg2014), file = "variables2014.txt")
-capture.output(names(eg2013), file = "variables2013.txt")
-capture.output(names(eg2012), file = "variables2012.txt")
-capture.output(names(eg2011), file = "variables2011.txt")
+#capture.output(names(eg2015), file = "variables2015.txt")
+#capture.output(names(eg2014), file = "variables2014.txt")
+#capture.output(names(eg2013), file = "variables2013.txt")
+#capture.output(names(eg2012), file = "variables2012.txt")
+#capture.output(names(eg2011), file = "variables2011.txt")
 
 #########################################
 #### Exploring Bind variables that have same variables' names (2015-2019)
