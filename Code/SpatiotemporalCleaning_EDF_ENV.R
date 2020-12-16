@@ -55,6 +55,15 @@ t2011 <- as.data.frame(t2011)
 
 edf2018$fecha_insc <- as.Date(edf2018$fecha_insc)
 
+edf2018 <- edf2018 %>% 
+  within(niv_inst[niv_inst == 3] <- 2) %>% 
+  within(niv_inst[niv_inst == 5] <- 3) %>%
+  within(niv_inst[niv_inst == 6] <- 5) %>%
+  within(niv_inst[niv_inst == 7] <- 6) %>% 
+  within(niv_inst[niv_inst == 8] <- 7) %>% 
+  within(niv_inst[niv_inst == 9] <- 8) %>% 
+  within(niv_inst[niv_inst == 99] <- 9)
+  
 edf2017_2019 <- bind_rows(edf2017, edf2018, edf2019)
 nrow(edf2019) + nrow(edf2018) + nrow(edf2017)
 
@@ -102,7 +111,7 @@ edf2012 <- edf2012 %>%
   mutate(col15 = 15) %>% 
   unite("fecha_insc", anio_insc, mes_insc, col15, sep = "-", remove = FALSE) %>% 
   unite("fecha_fall", anio_def, mes_def, col15, sep = "-", remove =FALSE) %>%
-  rename(hij_viv = hij_vivos, anio_fall = anio_def, mes_fall = mes_def, causa_fetal = cau_10ar) %>% 
+  rename(etnia = p_etnica, hij_viv = hij_vivos, anio_fall = anio_def, mes_fall = mes_def, causa_fetal = cau_10ar) %>% 
   select(-cod_pais, -ofi_insc, -acta_insc, -col15)
 
 edf2012$fecha_insc <- as.Date(edf2012$fecha_insc)
@@ -137,7 +146,7 @@ edf2011 <- edf2011 %>%
   unite("fecha_insc", anio_insc, mes_insc, col15, sep = "-", remove = FALSE) %>% 
   unite("fecha_fall", anio_fall, mes_fall, col15, sep = "-", remove =FALSE) %>%
   rename(hij_viv = hij_vivos, sem_gest = sem_gest1, causa_fetal = causa, asis_por = asit_por1, lugar_ocur = lug_fall) %>%
-  select(-vcausa, -aten_medica, -asit_por, -t, -th, -tm, -act_insc, -col15)
+  select(-region_res, -residente, -vcausa, -aten_medica, -asit_por, -t, -th, -tm, -act_insc, -col15)
 
 edf2011$fecha_insc <- as.Date(edf2011$fecha_insc)
 edf2011$fecha_fall <- as.Date(edf2011$fecha_fall)
@@ -155,4 +164,6 @@ edf2011$area_res <- as.numeric(as.character(edf2011$area_res))
 edf2011$est_civil <- as.numeric(as.character(edf2011$est_civil))
 edf2011$sem_gest <- as.numeric(as.character(edf2011$sem_gest))
 
+## Variables no presentes: Num controles prenatales, etnia, dias fechas inscripcion y fallecimiento
+# variables fecha nacimiento madre
 edf2011_2019 <- bind_rows(edf2011, edf2012_2019)
