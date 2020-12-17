@@ -7,7 +7,7 @@ library(rgeos)
 library(geosphere)
 library(rgdal)
 
-#library(raster)
+library(raster)
 
 #####
 #Solving conflict functions, with devtools
@@ -105,7 +105,7 @@ t(t(sapply(eg2016_2019, class)))
 t(t(sapply(eg2014, class)))
 
 eg2014 <- eg2014 %>% mutate_if(is.Date, as.character) %>% 
-          select(prov_ubi, cant_ubi, parr_ubi, clase, tipo, entidad, sector, 
+          dplyr::select(prov_ubi, cant_ubi, parr_ubi, clase, tipo, entidad, sector, 
                  mes_inv, sexo, cod_edad, edad, etnia, prov_res, cant_res, parr_res,
                  anio_ingr, mes_ingr, dia_ingr, fecha_ingr, anio_egr, mes_egr, 
                  dia_egr, fecha_egr, dia_estad, con_egrpa, cau_cie10, causa3, 
@@ -114,7 +114,7 @@ eg2014 <- eg2014 %>% mutate_if(is.Date, as.character) %>%
           mutate(fecha_egr = str_replace_all(eg2014$fecha_egr, "-", "/"))
   
 eg2013 <- eg2013 %>% mutate_if(is.Date, as.character) %>% 
-  select(prov_ubi, cant_ubi, parr_ubi, clase, tipo, entidad, sector, 
+  dplyr::select(prov_ubi, cant_ubi, parr_ubi, clase, tipo, entidad, sector, 
          mes_inv, sexo, cod_edad, edad, prov_res, cant_res, parr_res,
          anio_ingr, mes_ingr, dia_ingr, fecha_ingr, anio_egr, mes_egr, 
          dia_egr, fecha_egr, dia_estad, con_egrpa, cau_cie10, causa3, 
@@ -125,7 +125,7 @@ eg2013 <- eg2013 %>% mutate_if(is.Date, as.character) %>%
   
 eg2012 <- eg2012 %>% mutate_if(is.Date, as.character) %>% 
   unite("fecha_ingr", Anio_ingr, Mes_ingr, Dia_ingr, sep = "/", remove = FALSE) %>% 
-  select(Prov_ubie, Cant_ubie, Parr_ubie, Clase, Tipo, Entidad, Sector, 
+  dplyr::select(Prov_ubie, Cant_ubie, Parr_ubie, Clase, Tipo, Entidad, Sector, 
          Mes_inv, Sexo_pac, Cond_edad, Edad_pac, Prov_pac, Cant_pac, Parr_pac,
          Anio_ingr, Mes_ingr, Dia_ingr, fecha_ingr, Mes_egr, 
          Dia_egr, Dia_estad, Con_egrpa, Cau_cie10, Causa3, 
@@ -146,7 +146,7 @@ eg2012 <- eg2012 %>% mutate_if(is.Date, as.character) %>%
 
 eg2011 <- eg2011 %>% mutate_if(is.Date, as.character) %>% 
   unite("fecha_ingr", anio_ingr, mes_ingr, dia_ingr, sep = "/", remove = FALSE) %>% 
-  select(prov_ubie, cant_ubie, par_ubie, clase, tipo, entidad, sector, 
+  dplyr::select(prov_ubie, cant_ubie, par_ubie, clase, tipo, entidad, sector, 
          mes_inv, sexo_pac, cond_edad, edad_pac, prov_pac, cant_pac, parr_pac,
          anio_ingr, mes_ingr, dia_ingr, fecha_ingr, mes_egr, 
          dia_egr, dia_estad, con_egrpa, cau_cie10, 
@@ -226,34 +226,76 @@ sum(nrow(eg2011) + nrow(eg2012) + nrow(eg2013_2019))
 sum(is.na(eg2011_2019$cant_res))
 sum(eg2011_2019$cant_res == "8800")
 #11535
-# NO missing, son "8800" que significa EXTERIOR. Puedo quitarlos =)
 
-eg2011_2019 <- eg2011_2019 %>% subset(cant_res != "8800")
-sum(eg2011_2019$cant_res == "8800")
+# NO missing, son "8800" que significa EXTERIOR. Puedo quitarlos =)
+#Haciendo consistente La concordia, andtes 0808 ahora 2302 provincia 23
+
+eg2011_2019 <- eg2011_2019 %>% subset(cant_res != "8800") %>% 
+  mutate(prov_ubi = replace(prov_ubi, cant_ubi == "0808", "23")) %>% 
+  mutate(prov_res = replace(prov_res, cant_res == "0808", "23")) %>%
+  within(cant_ubi[cant_ubi == "0808"] <- "2302") %>% 
+  within(cant_res[cant_res == "0808"] <- "2302") 
+
+
+#Probando si sirvió el replace
+#sum(eg2011_2019$prov_ubi == "08" & eg2011_2019$cant_ubi == "0808")
+#sum(eg2011_2019prueba$prov_ubi == "08" & eg2011_2019prueba$cant_ubi == "0808")
+
+#sum(eg2011_2019$prov_res == "08" & eg2011_2019$cant_res == "0808")
+#sum(eg2011_2019prueba$prov_res == "08" & eg2011_2019prueba$cant_res == "0808")
+
+#sum(eg2011_2019$cant_res == "0808")
+#sum(eg2011_2019$cant_ubi == "0808")
+#sum(eg2011_2019$cant_res == "2302")
+#sum(eg2011_2019$cant_ubi == "2302")
+
+
+#sum(eg2011_2019prueba$cant_res == "0808")
+#sum(eg2011_2019prueba$cant_ubi == "0808")
+#sum(eg2011_2019prueba$cant_res == "2302")
+#sum(eg2011_2019prueba$cant_ubi == "2302")
+
+
+
 
 ### Dropping variables that are NOT in all years. 
 eg_2011_2019_all <- eg2011_2019 %>% 
-  select(-c(causa3, anio_egr, fecha_egr, etnia, area_ubi, nac_pac, nom_pais, 
+  dplyr::select(-c(causa3, anio_egr, fecha_egr, etnia, area_ubi, nac_pac, nom_pais, 
             cod_pais, area_res, esp_egrpa))
 
 ###############################################
 ###Calculating Centroids from shapefile 
+### USing two different shapefiles, one sent by Gabi and other from GADM (one canton less La Concordia)
+### In nxcantones, La Concordia is 0808 (como parte de esmeraldas), 
+### El de GADM está actualizado y es 2302 (Santo Domingo de los Tsáchilas)
 ####### 
+
+
+
 
 cantones_shp <- readOGR("Data/Cantones2014_INEC", "nxcantones")
 plot(cantones_shp)
 centroidCant <- gCentroid(cantones_shp, byid = TRUE)
 
+cantones_shp2 <- raster::getData('GADM',country='ECU',level=2)
+plot(cantones_shp2)
+centroidCant2 <- gCentroid(cantones_shp2, byid = TRUE)
+
 SpDF_centroid <- SpatialPointsDataFrame(centroidCant, cantones_shp@data)
 SpDF_centroid 
+
+SpDF_centroid2 <- SpatialPointsDataFrame(centroidCant2, cantones_shp2@data)
+SpDF_centroid2 
+
+
 
 #plot(cantones_shp)
 #plot(SpDF_centroid, add = TRUE)
 
 CantCentr_df <- as.data.frame(SpDF_centroid)
+CantCentr_df2 <- as.data.frame(SpDF_centroid2)
 
-
-CantCentr_df <- CantCentr_df %>% select(DPA_CANTON, DPA_DESCAN, x, y) 
+CantCentr_df <- CantCentr_df %>% dplyr::select(DPA_CANTON, DPA_DESCAN, x, y) 
 
 save(CantCentr_df, file = "Data/EcuadorCantCent.RData")
 
@@ -287,7 +329,7 @@ eg2011_2019_extVar <- eg2011_2019_extVar0  %>% left_join(y = CantCentr_df, by = 
   rename(proy_pobRes = proy_pob) %>% 
   left_join(y = proy_pob2010_2020, by = c("cant_ubi" = "DPA_CANTON","anio_ingr" = "proy_year") ) %>%
   rename(proy_pobUbi = proy_pob) %>% 
-  select(prov_ubi, cant_ubi, Nom_CantUbi, CordXubi, CordYubi, proy_pobUbi, parr_ubi, area_ubi, clase, tipo, 
+  dplyr::select(prov_ubi, cant_ubi, Nom_CantUbi, CordXubi, CordYubi, proy_pobUbi, parr_ubi, area_ubi, clase, tipo, 
          entidad, sector, mes_inv, sexo, cod_edad, edad, etnia, nac_pac, nom_pais, cod_pais, prov_res, cant_res, 
          Nom_CantRes, CordXres, CordYres, proy_pobRes, parr_res, area_res, anio_ingr, mes_ingr, dia_ingr, 
          fecha_ingr, anio_egr, mes_egr, dia_egr, fecha_egr, dia_estad, con_egrpa, cau_cie10, causa3, 
