@@ -268,7 +268,10 @@ eg_2011_2019_all <- eg2011_2019 %>%
 ### USing two different shapefiles, one sent by Gabi and other from GADM (one canton less La Concordia)
 ### In nxcantones, La Concordia is 0808 (como parte de esmeraldas), 
 ### El de GADM está actualizado y es 2302 (Santo Domingo de los Tsáchilas)
-####### 
+#### Con los archivos que tengo hay dos opciones:
+#### 1. Con GADM, dejar por fuera las golondrinas, manga del cura, y el piedrero (9001, 9003, 9004)
+#### 2. Con el shapefile de gabi, debo cambiar el 0808 al 2302
+#### NOTA: EN CUALQUIER CASO EL ARCHIVO DE PROYEC POBLACION DEBO CAMBIAR 0808 a 2302 
 
 
 
@@ -304,7 +307,9 @@ class(CantCentr_df$y)
 
 ###PARECE QUE TODO BIEN HASTA ACA CON CORDS REVISAR SI ES ABAJO AL MANIPULAR LA VARIABLE
 #There was a conflict with select (probably with raster), alternative is conflict_prefer(),
-#pero decid no llamar el paquete raster() que era el del conflicto
+#pero decidí llamar dplyr::select cuando lo use, y así evitar el conflicto. 
+
+#DEBO CAMBIAR 0808 a 2302 DEC 16
 
 proy_pob2010_2020unitdy <- read.csv("Data/proyeccion_cantonal_total_2010-2020.csv", sep = " ", header= TRUE,
                               colClasses = c("character", "numeric", "numeric", "numeric", "numeric", "numeric", 
