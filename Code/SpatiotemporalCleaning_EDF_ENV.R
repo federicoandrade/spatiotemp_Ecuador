@@ -177,7 +177,38 @@ sum(edf2011_2019$cant_res == "9001"| edf2011_2019$cant_res == "9002" | edf2011_2
 #NACIMIENTOS VIVOS
 ###############################################################################
 
+env2019 <- read_sav("Data/ENV_2019.sav")
+env2018 <- read_sav("Data/ENV_2018.sav")
+env2017 <- read_sav("Data/ENV_2017.sav")
+env2016 <- read_sav("Data/ENV_2016.sav")
+env2015 <- read_sav("Data/ENV_2015.sav")
+env2014 <- read_sav("Data/ENV_2014.sav")
+env2013 <- read_sav("Data/ENV_2013.sav")
+env2012 <- read_sav("Data/ENV_2012.sav")
+env2011 <- read_sav("Data/ENV_2011.sav")
 
 
 
+##### Checking consistency in variables and variable's names across years
 
+tenv2019 <- t(t(sapply(env2019, class)))
+tenv2018 <- t(t(sapply(env2018, class)))
+tenv2017 <- t(t(sapply(env2017, class)))
+tenv2016 <- t(t(sapply(env2016, class)))
+tenv2015 <- t(t(sapply(env2015, class)))
+tenv2014 <- t(t(sapply(env2014, class)))
+tenv2013 <- t(t(sapply(env2013, class)))
+tenv2012 <- t(t(sapply(env2012, class)))
+tenv2011 <- t(t(sapply(env2011, class)))
+
+tenv2019 <- as.data.frame(tenv2019)
+tenv2018 <- as.data.frame(tenv2018)
+tenv2017 <- as.data.frame(tenv2017)
+tenv2016 <- as.data.frame(tenv2016)
+tenv2015 <- as.data.frame(tenv2015)
+tenv2014 <- as.data.frame(tenv2014)
+tenv2013 <- as.data.frame(tenv2013)
+tenv2012 <- as.data.frame(tenv2012)
+tenv2011 <- as.data.frame(tenv2011)
+
+######## Changing variables clasess for binding
