@@ -273,6 +273,16 @@ eg_2011_2019_all <- eg2011_2019 %>%
 #### 2. Con el shapefile de gabi, debo cambiar el 0808 al 2302
 #### NOTA: EN CUALQUIER CASO EL ARCHIVO DE PROYEC POBLACION DEBO CAMBIAR 0808 a 2302 
 
+## Verificando si hay algún caso en los territorios que no son cantón
+#9001, 9003, 9004
+
+
+sum(childLeuk$cant_res == "9001"| childLeuk$cant_res == "9002" | childLeuk$cant_res == "9003")
+sum(parkinsons$cant_res == "9001"| parkinsons$cant_res == "9002" | parkinsons$cant_res == "9003")
+sum(NHlym$cant_res == "9001"| NHlym$cant_res == "9002" | NHlym$cant_res == "9003")
+sum(edf2011_2019$cant_res == "9001"| edf2011_2019$cant_res == "9002" | edf2011_2019$cant_res == "9003") # Ni total ni ninguna enfermedad
+
+### Puedo usar GADM si confío más. Podría ser más confiable?
 
 
 
@@ -320,7 +330,8 @@ proy_pob2010_2020 <- proy_pob2010_2020unitdy %>%
                                     X2014, X2015, X2016, X2017, 
                                     X2018, X2019, X2020),
                                     names_to = "proy_year", values_to = "proy_pob") %>% 
-  mutate(proy_year = as.numeric(gsub("X", "", proy_year)))
+  mutate(proy_year = as.numeric(gsub("X", "", proy_year))) %>% 
+  filter(DPA_CANTON != "9001", DPA_CANTON != "9003", DPA_CANTON != "9004")
 
 #save(proy_pob2010_2020, file = "Data/populationCanton.RData")
 
@@ -382,6 +393,5 @@ ggplot(pest_intox) +
   geom_bar(aes(x = factor(anio_ingr), fill = factor(sexo)), position = position_dodge(), width = 0.7) +
   theme(legend.position="right") +
   labs(title = 'Pesticides intoxication frequency')
-
 
 

@@ -75,17 +75,17 @@ nrow(edf2016) + nrow(edf2015)
 # works!
 
 edf2017_2019 <- edf2017_2019 %>% 
-  select(-cod_pais)
+  dplyr::select(-cod_pais)
 edf2015_2016 <- edf2015_2016 %>% 
-  select(-cod_pais)
+  dplyr::select(-cod_pais)
 
 edf2015_2019 <- bind_rows(edf2015_2016, edf2017_2019)
 # =) suma de las filas es consistente. 
 
 edf2015_2019 <- edf2015_2019 %>% 
-  select(-nom_pais)
+  dplyr::select(-nom_pais)
 edf2014 <- edf2014 %>% 
-  select(-cod_pais)
+  dplyr::select(-cod_pais)
 
 edf2014_2019 <- bind_rows(edf2014, edf2015_2019)
 # =), consistent row count. 
@@ -94,7 +94,7 @@ edf2013 <- edf2013 %>%
   unite("fecha_insc", anio_insc, mes_insc, dia_insc, sep = "-", remove = FALSE) %>% 
   unite("fecha_fall", anio_fall, mes_fall, dia_fall, sep = "-", remove =FALSE) %>% 
   unite("fecha_mad", anio_mad, mes_mad, dia_mad, sep = "-", remove = FALSE) %>% 
-  select(-cod_esta, -cod_pais, -ofi_insc, -folio, -acta_insc)
+  dplyr::select(-cod_esta, -cod_pais, -ofi_insc, -folio, -acta_insc)
    
 edf2013$fecha_insc <- as.Date(edf2013$fecha_insc)
 edf2013$fecha_fall <- as.Date(edf2013$fecha_fall)
@@ -112,7 +112,7 @@ edf2012 <- edf2012 %>%
   unite("fecha_insc", anio_insc, mes_insc, col15, sep = "-", remove = FALSE) %>% 
   unite("fecha_fall", anio_def, mes_def, col15, sep = "-", remove =FALSE) %>%
   rename(etnia = p_etnica, hij_viv = hij_vivos, anio_fall = anio_def, mes_fall = mes_def, causa_fetal = cau_10ar) %>% 
-  select(-cod_pais, -ofi_insc, -acta_insc, -col15)
+  dplyr::select(-cod_pais, -ofi_insc, -acta_insc, -col15)
 
 edf2012$fecha_insc <- as.Date(edf2012$fecha_insc)
 edf2012$fecha_fall <- as.Date(edf2012$fecha_fall)
@@ -139,14 +139,14 @@ edf2011$lug_fall <- as.numeric(as.character(edf2011$lug_fall))
 edf2011$sexo <- as.numeric(as.character(edf2011$sexo))
 
 edf2011 <- edf2011 %>% 
-  select(-sem_gest)
+  dplyr::select(-sem_gest)
 
 edf2011 <- edf2011 %>% 
   mutate(col15 = 15) %>% 
   unite("fecha_insc", anio_insc, mes_insc, col15, sep = "-", remove = FALSE) %>% 
   unite("fecha_fall", anio_fall, mes_fall, col15, sep = "-", remove =FALSE) %>%
   rename(hij_viv = hij_vivos, sem_gest = sem_gest1, causa_fetal = causa, asis_por = asit_por1, lugar_ocur = lug_fall) %>%
-  select(-region_res, -residente, -vcausa, -aten_medica, -asit_por, -t, -th, -tm, -act_insc, -col15)
+  dplyr::select(-region_res, -residente, -vcausa, -aten_medica, -asit_por, -t, -th, -tm, -act_insc, -col15)
 
 edf2011$fecha_insc <- as.Date(edf2011$fecha_insc)
 edf2011$fecha_fall <- as.Date(edf2011$fecha_fall)
@@ -167,3 +167,17 @@ edf2011$sem_gest <- as.numeric(as.character(edf2011$sem_gest))
 ## Variables no presentes: Num controles prenatales, etnia, dias fechas inscripcion y fallecimiento
 # variables fecha nacimiento madre
 edf2011_2019 <- bind_rows(edf2011, edf2012_2019)
+
+## Verificando si hay algún caso en los territorios que no son cantón
+#9001, 9003, 9004
+sum(edf2011_2019$cant_res == "9001"| edf2011_2019$cant_res == "9002" | edf2011_2019$cant_res == "9003")
+
+
+##############################################################################
+#NACIMIENTOS VIVOS
+###############################################################################
+
+
+
+
+
