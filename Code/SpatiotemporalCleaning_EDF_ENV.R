@@ -211,4 +211,23 @@ tenv2013 <- as.data.frame(tenv2013)
 tenv2012 <- as.data.frame(tenv2012)
 tenv2011 <- as.data.frame(tenv2011)
 
-######## Changing variables clasess for binding
+######## Changing variables clasess for binding 
+
+env2019$fecha_nac <- as.Date(env2019$fecha_nac)
+env2017$fecha_nac <- as.Date(env2017$fecha_nac)
+env2017$cod_pais <- as.character(env2017$cod_pais)
+env2014$fecha_insc <- as.character(env2014$fecha_insc)
+env2013$fecha_insc <- as.character(env2013$fecha_insc)
+env2013$fecha_mad <- as.character(env2013$fecha_mad)
+
+env2018_2019 <- bind_rows(env2018, env2019)
+env2017_2019 <- bind_rows(env2017, env2018_2019)
+env2015_2019 <- bind_rows(env2015, env2016, env2017_2019)
+
+env2014 <- env2014 %>% 
+          dplyr::select(-tip_insc, - ofi_insc)  
+env2013 <- env2013 %>% 
+  dplyr::select(-folio, - ofi_insc, -acta_insc, -cod_esta)  
+
+env2014_2019 <- bind_rows(env2014, env2015_2019)
+env2013_2019 <- bind_rows(env2013, env2014_2019)
