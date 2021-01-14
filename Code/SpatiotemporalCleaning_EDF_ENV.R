@@ -229,5 +229,14 @@ env2014 <- env2014 %>%
 env2013 <- env2013 %>% 
   dplyr::select(-folio, - ofi_insc, -acta_insc, -cod_esta)  
 
+env2012 <- env2012 %>% 
+  rename(etnia = p_etnica, hij_viv = hij_vivos) %>% 
+  dplyr::select(- ofi_insc, -acta_insc, -aten_medica, -tipo_insc)
+
+
+
 env2014_2019 <- bind_rows(env2014, env2015_2019)
 env2013_2019 <- bind_rows(env2013, env2014_2019)
+env2012_2019 <- bind_rows(env2012, env2013_2019)
+
+##### Missing: delete years before the period range, checking NA, 
