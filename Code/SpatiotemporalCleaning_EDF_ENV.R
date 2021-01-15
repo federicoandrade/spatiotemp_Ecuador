@@ -191,25 +191,25 @@ env2011 <- read_sav("Data/ENV_2011.sav")
 
 ##### Checking consistency in variables and variable's names across years
 
-tenv2019 <- t(t(sapply(env2019, class)))
-tenv2018 <- t(t(sapply(env2018, class)))
-tenv2017 <- t(t(sapply(env2017, class)))
-tenv2016 <- t(t(sapply(env2016, class)))
-tenv2015 <- t(t(sapply(env2015, class)))
-tenv2014 <- t(t(sapply(env2014, class)))
-tenv2013 <- t(t(sapply(env2013, class)))
-tenv2012 <- t(t(sapply(env2012, class)))
-tenv2011 <- t(t(sapply(env2011, class)))
+#tenv2019 <- t(t(sapply(env2019, class)))
+#tenv2018 <- t(t(sapply(env2018, class)))
+#tenv2017 <- t(t(sapply(env2017, class)))
+#tenv2016 <- t(t(sapply(env2016, class)))
+#tenv2015 <- t(t(sapply(env2015, class)))
+#tenv2014 <- t(t(sapply(env2014, class)))
+#tenv2013 <- t(t(sapply(env2013, class)))
+#tenv2012 <- t(t(sapply(env2012, class)))
+#tenv2011 <- t(t(sapply(env2011, class)))
 
-tenv2019 <- as.data.frame(tenv2019)
-tenv2018 <- as.data.frame(tenv2018)
-tenv2017 <- as.data.frame(tenv2017)
-tenv2016 <- as.data.frame(tenv2016)
-tenv2015 <- as.data.frame(tenv2015)
-tenv2014 <- as.data.frame(tenv2014)
-tenv2013 <- as.data.frame(tenv2013)
-tenv2012 <- as.data.frame(tenv2012)
-tenv2011 <- as.data.frame(tenv2011)
+#tenv2019 <- as.data.frame(tenv2019)
+#tenv2018 <- as.data.frame(tenv2018)
+#tenv2017 <- as.data.frame(tenv2017)
+#tenv2016 <- as.data.frame(tenv2016)
+#tenv2015 <- as.data.frame(tenv2015)
+#tenv2014 <- as.data.frame(tenv2014)
+#tenv2013 <- as.data.frame(tenv2013)
+#tenv2012 <- as.data.frame(tenv2012)
+#tenv2011 <- as.data.frame(tenv2011)
 
 ######## Changing variables clasess for binding 
 
@@ -244,9 +244,30 @@ sum(env2012_2019$anio_nac > 2011)
 env2012_2019 <- env2012_2019 %>%
               filter(anio_nac > 2011)
 
-hist(env2012_2019$anio_nac)
 hist(env2012_2019$peso)
 sum(is.na(env2012_2019$peso))
+sum(is.na(env2012_2019$num_emb))
+sum(is.na(env2012_2019$cant_res))
+sum(is.na(env2012_2019$con_pren))
+sum(is.na(env2012_2019$etnia))
+sum(is.na(env2012_2019$niv_inst))
+sum(is.na(env2012_2019$est_civil))
+sum(is.na(env2012_2019$sabe_leer))
 
+table(env2012_2019$hij_vivm)
+table(env2012_2019$hij_nacm)
+table(env2012_2019$hij_viv)
+table(env2012_2019$con_pren)
+table(env2012_2019$area_res)
+
+boxplot(env2012_2019$peso ~ env2012_2019$area_res)
+
+env2012_2019Box <- env2012_2019 %>% 
+  filter(peso > 99 & peso < 9999 & sem_gest <99)
+
+boxplot(env2012_2019Box$peso ~ env2012_2019Box$area_res)
+boxplot(env2012_2019Box$peso ~ env2012_2019Box$etnia)
+plot(env2012_2019Box$peso, env2012_2019Box$sem_gest)
+cor(env2012_2019Box$peso, env2012_2019Box$sem_gest)
 
 ##### Missing: checking NA (when the birth registered is from an earlier year it does not have the covariates) 
