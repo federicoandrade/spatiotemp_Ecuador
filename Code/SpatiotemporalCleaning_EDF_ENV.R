@@ -238,5 +238,15 @@ env2012 <- env2012 %>%
 env2014_2019 <- bind_rows(env2014, env2015_2019)
 env2013_2019 <- bind_rows(env2013, env2014_2019)
 env2012_2019 <- bind_rows(env2012, env2013_2019)
+sum(env2012_2019$anio_nac > 2011)
 
-##### Missing: delete years before the period range, checking NA, 
+#Filtering those who were born before the study period 
+env2012_2019 <- env2012_2019 %>%
+              filter(anio_nac > 2011)
+
+hist(env2012_2019$anio_nac)
+hist(env2012_2019$peso)
+sum(is.na(env2012_2019$peso))
+
+
+##### Missing: checking NA (when the birth registered is from an earlier year it does not have the covariates) 
