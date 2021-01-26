@@ -172,6 +172,13 @@ edf2011_2019 <- bind_rows(edf2011, edf2012_2019)
 #9001, 9003, 9004
 sum(edf2011_2019$cant_res == "9001"| edf2011_2019$cant_res == "9002" | edf2011_2019$cant_res == "9003")
 
+### Solo anios fallecimiento en el rango (2011-2019)
+
+edf2011_2019 <- edf2011_2019 %>%  
+                filter(anio_fall > 2010)
+  
+  
+
 
 ##############################################################################
 #NACIMIENTOS VIVOS
@@ -240,6 +247,7 @@ env2013_2019 <- bind_rows(env2013, env2014_2019)
 env2012_2019 <- bind_rows(env2012, env2013_2019)
 sum(env2012_2019$anio_nac > 2011)
 
+## Not including previous years data bases as covariates of interest not available for edf before 2012
 #Filtering those who were born before the study period 
 env2012_2019 <- env2012_2019 %>%
               filter(anio_nac > 2011)
@@ -269,5 +277,6 @@ boxplot(env2012_2019Box$peso ~ env2012_2019Box$area_res)
 boxplot(env2012_2019Box$peso ~ env2012_2019Box$etnia)
 plot(env2012_2019Box$peso, env2012_2019Box$sem_gest)
 cor(env2012_2019Box$peso, env2012_2019Box$sem_gest)
+
 
 ##### Missing: checking NA (when the birth registered is from an earlier year it does not have the covariates) 

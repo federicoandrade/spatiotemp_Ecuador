@@ -28,7 +28,7 @@ edg2014 <- read_sav("Data/EDG_2014.sav")
 edg2013 <- read_sav("Data/EDG_2013.sav")
 edg2012 <- read_sav("Data/EDG_2012.sav")
 edg2011 <- read_sav("Data/EDG_2011.sav")
-
+edg2010 <- read_sav("Data/EDG_2010.sav")
 
 #############
 #Class

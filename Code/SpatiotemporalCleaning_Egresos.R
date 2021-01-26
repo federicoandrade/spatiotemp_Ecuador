@@ -6,6 +6,7 @@ library(sf)
 library(rgeos)
 library(geosphere)
 library(rgdal)
+library(foreign)
 
 library(raster)
 
@@ -23,7 +24,17 @@ library(raster)
 # Importing and exploring data EGRESOS
 ###
 
-
+eg2000 <- read.dbf("Data/Egresos_hospitalarios2000.dbf")
+eg2001 <- read.dbf("Data/Egresos_hospitalarios2001.dbf")
+eg2002 <- read_sav("Data/Egresos_hospitalarios2002.sav")
+eg2003 <- read_sav("Data/Egresos_hospitalarios2003.sav")
+eg2004 <- read_sav("Data/Egresos_hospitalarios2004.sav")
+eg2005 <- read_sav("Data/Egresos_hospitalarios2005.sav")
+eg2006 <- read_sav("Data/Egresos_hospitalarios2006.sav")
+eg2007 <- read_sav("Data/Egresos_hospitalarios2007.sav")
+eg2008 <- read_sav("Data/Egresos_hospitalarios2008.sav")
+eg2009 <- read_sav("Data/Egresos_hospitalarios2009.sav")
+eg2010 <- read_sav("Data/Egresos_hospitalarios2010.sav")
 eg2011 <- read_sav("Data/Egresos_hospitalarios2011.sav")
 eg2012 <- read_sav("Data/Egresos_hospitalarios2012.sav")
 eg2013 <- read_sav("Data/Egresos_hospitalarios2013.sav")
@@ -319,7 +330,7 @@ class(CantCentr_df$y)
 #There was a conflict with select (probably with raster), alternative is conflict_prefer(),
 #pero decidí llamar dplyr::select cuando lo use, y así evitar el conflicto. 
 
-#DEBO CAMBIAR 0808 a 2302 DEC 16
+
 
 proy_pob2010_2020unitdy <- read.csv("Data/proyeccion_cantonal_total_2010-2020.csv", sep = " ", header= TRUE,
                               colClasses = c("character", "numeric", "numeric", "numeric", "numeric", "numeric", 
