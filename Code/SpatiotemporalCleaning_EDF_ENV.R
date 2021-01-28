@@ -27,7 +27,17 @@ edf2014 <- read_sav("Data/EDF_2014.sav")
 edf2013 <- read_sav("Data/EDF_2013.sav")
 edf2012 <- read_sav("Data/EDF_2012.sav")
 edf2011 <- read_sav("Data/EDF_2011.sav")
-
+edf2010 <- read_sav("Data/EDF_2010.sav")
+edf2009 <- read_sav("Data/EDF_2009.sav")
+edf2008 <- read_sav("Data/EDF_2008.sav")
+edf2007 <- read_sav("Data/EDF_2007.sav")
+edf2006 <- read_sav("Data/EDF_2006.sav")
+edf2005 <- read_sav("Data/EDF_2005.sav")
+edf2004 <- read_sav("Data/EDF_2004.sav")
+edf2003 <- read_sav("Data/EDF_2003.sav")
+edf2002 <- read_sav("Data/EDF_2002.sav")
+edf2001 <- read_sav("Data/EDF_2001.sav")
+edf2000 <- read_sav("Data/EDF_2000.sav")
 
 ##### Checking consistency in variables and variable's names across years
 
@@ -193,8 +203,17 @@ env2014 <- read_sav("Data/ENV_2014.sav")
 env2013 <- read_sav("Data/ENV_2013.sav")
 env2012 <- read_sav("Data/ENV_2012.sav")
 env2011 <- read_sav("Data/ENV_2011.sav")
-
-
+env2010 <- read_sav("Data/ENV_2010.sav")
+env2009 <- read_sav("Data/ENV_2009.sav")
+env2008 <- read_sav("Data/ENV_2008.sav")
+env2007 <- read_sav("Data/ENV_2007.sav")
+env2006 <- read_sav("Data/ENV_2006.sav")
+env2005 <- read_sav("Data/ENV_2005.sav")
+env2004 <- read_sav("Data/ENV_2004.sav")
+env2003 <- read_sav("Data/ENV_2003.sav")
+env2002 <- read_sav("Data/ENV_2002.sav")
+env2001 <- read_sav("Data/ENV_2001.sav")
+env2000 <- read_sav("Data/ENV_2000.sav")
 
 ##### Checking consistency in variables and variable's names across years
 
