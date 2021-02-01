@@ -289,13 +289,33 @@ table(env2012_2019$area_res)
 
 boxplot(env2012_2019$peso ~ env2012_2019$area_res)
 
+
+
+##Intial exploration outocome variable (peso) January 31, 2020
+
 env2012_2019Box <- env2012_2019 %>% 
   filter(peso > 99 & peso < 9999 & sem_gest <99)
+
+env2012_2019Box$etnia <- as.factor(env2012_2019Box$etnia)
+env2012_2019Box$niv_inst <- as.factor(env2012_2019Box$niv_inst)
+
 
 boxplot(env2012_2019Box$peso ~ env2012_2019Box$area_res)
 boxplot(env2012_2019Box$peso ~ env2012_2019Box$etnia)
 plot(env2012_2019Box$peso, env2012_2019Box$sem_gest)
 cor(env2012_2019Box$peso, env2012_2019Box$sem_gest)
+
+lm_peso_etnia <- lm(env2012_2019Box$peso ~ env2012_2019Box$etnia)
+summary(lm_peso_etnia)
+
+lm_peso_nivinst <- lm(env2012_2019Box$peso ~ env2012_2019Box$niv_inst)
+summary(lm_peso_nivinst)
+
+lm_peso_edad <- lm(env2012_2019Box$peso ~ env2012_2019Box$edad_mad)
+summary(lm_peso_edad)
+
+quantile(env2012_2019Box$peso, prob = c(0.1, 0.25, 0.5, 0.75, 0.90))
+sum(env2012_2019Box$peso > 2500)
 
 
 ##### Missing: checking NA (when the birth registered is from an earlier year it does not have the covariates) 
