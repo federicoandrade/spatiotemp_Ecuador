@@ -226,6 +226,8 @@ env2000 <- read_sav("Data/ENV_2000.sav")
 #tenv2013 <- t(t(sapply(env2013, class)))
 #tenv2012 <- t(t(sapply(env2012, class)))
 #tenv2011 <- t(t(sapply(env2011, class)))
+#tenv2010 <- t(t(sapply(env2010, class)))
+tenv2009 <- t(t(sapply(env2009, class)))
 
 #tenv2019 <- as.data.frame(tenv2019)
 #tenv2018 <- as.data.frame(tenv2018)
@@ -236,6 +238,8 @@ env2000 <- read_sav("Data/ENV_2000.sav")
 #tenv2013 <- as.data.frame(tenv2013)
 #tenv2012 <- as.data.frame(tenv2012)
 #tenv2011 <- as.data.frame(tenv2011)
+#tenv2010 <- as.data.frame(tenv2010)
+tenv2009 <- as.data.frame(tenv2009)
 
 ######## Changing variables clasess for binding 
 
@@ -259,12 +263,111 @@ env2012 <- env2012 %>%
   rename(etnia = p_etnica, hij_viv = hij_vivos) %>% 
   dplyr::select(- ofi_insc, -acta_insc, -aten_medica, -tipo_insc)
 
+env2011 <- env2011 %>% 
+  rename(etnia = p_etnica, hij_viv = hij_vivos) %>% 
+  dplyr::select(- ofi_insc, -acta_insc, -aten_medica, -tipo_insc, 
+                - fac_rh, -nac_pad, - edad_pad, -tipo_san) %>% 
+  mutate(anio_insc = as.numeric(anio_insc)) %>% 
+  mutate(mes_insc = as.numeric(as.character(mes_insc))) %>% 
+  mutate(sexo = as.numeric(as.character(sexo))) %>% 
+  mutate(tipo_part = as.numeric(as.character(tipo_part))) %>% 
+  mutate(anio_nac = as.numeric(anio_nac)) %>% 
+  mutate(mes_nac = as.numeric(as.character(mes_nac))) %>% 
+  mutate(p_emb = as.numeric(as.character(p_emb))) %>% 
+  mutate(lugar_ocur = as.numeric(as.character(lugar_ocur))) %>% 
+  mutate(asis_por = as.numeric(as.character(asis_por))) %>% 
+  mutate(area_nac = as.numeric(as.character(area_nac))) %>% 
+  mutate(nac_mad = as.numeric(as.character(nac_mad))) %>% 
+  mutate(etnia = as.numeric(as.character(etnia))) %>% 
+  mutate(est_civil = as.numeric(as.character(est_civil))) %>% 
+  mutate(sabe_leer = as.numeric(as.character(sabe_leer))) %>% 
+  mutate(niv_inst = as.numeric(as.character(niv_inst))) %>% 
+  mutate(area_res = as.numeric(as.character(area_res))) %>% 
+  mutate(residente = as.numeric(as.character(residente)))
+
+##OJO To reorg p_etnica, menos categorisas desde 2010
+## Lugar_ocur, catergorias distintas desde 2009
+
+env2010 <- env2010 %>% 
+  rename(prov_insc = PROV_INS, cant_insc = CAN_INS, parr_insc = PAR_INS,
+         anio_insc = ANIO_INS, mes_insc = MES_INS, sexo = SEXO, talla = TALLA,
+         peso = PESO, anio_nac = ANIO_NAC, mes_nac = MES_NAC, sem_gest = SEM_GEST,
+         lugar_ocur = LUGAR_OCUR, asis_por = ASIS_POR, prov_nac = PRO_NAC, 
+         cant_nac = CAN_NAC, parr_nac = PAR_NAC, area_nac = AREA_NAC, edad_mad = EDAD_MAD,
+         hij_viv = HIJ_VIVOS, hij_vivm = HIJ_VIVM, hij_nacm = HIJ_NACM, etnia = P_ETNICA,
+         est_civil = EST_CIVIL, sabe_leer = SABE_LEER, niv_inst = NIV_INST, prov_res = PRO_RES,
+         cant_res = CAN_RES, parr_res = PAR_RES, area_res = AREA_RES, residente = RESIDENTE,
+         p_emb = TIPO_NAC) %>% 
+  dplyr::select(-ACTA_INS, -ATEN_MEDICA, -OFICINA, -REG_INS, -ENCUESTA) %>% 
+  mutate(anio_insc = as.numeric(anio_insc)) %>% 
+  mutate(mes_insc = as.numeric(as.character(mes_insc))) %>% 
+  mutate(sexo = as.numeric(as.character(sexo))) %>% 
+  mutate(anio_nac = as.numeric(anio_nac)) %>% 
+  mutate(mes_nac = as.numeric(as.character(mes_nac))) %>% 
+  mutate(p_emb = as.numeric(as.character(p_emb))) %>% 
+  mutate(lugar_ocur = as.numeric(as.character(lugar_ocur))) %>% 
+  mutate(asis_por = as.numeric(as.character(asis_por))) %>% 
+  mutate(area_nac = as.numeric(as.character(area_nac))) %>% 
+  mutate(etnia = as.numeric(as.character(etnia))) %>% 
+  mutate(est_civil = as.numeric(as.character(est_civil))) %>% 
+  mutate(sabe_leer = as.numeric(as.character(sabe_leer))) %>% 
+  mutate(niv_inst = as.numeric(as.character(niv_inst))) %>% 
+  mutate(area_res = as.numeric(as.character(area_res))) %>% 
+  mutate(residente = as.numeric(as.character(residente)))
+
+env2009 <- env2009 %>% 
+  rename(prov_insc = PROV_INS, cant_insc = CAN_INSC, parr_insc = PAR_INSC,
+         anio_insc = ANIO_INS, mes_insc = MES_INSC, sexo = SEXO, talla = TALLA,
+         peso = PESO, anio_nac = ANIO_NAC, mes_nac = MES_NAC, sem_gest = SEM_GEST,
+         lugar_ocur = LUG_ACAE, asis_por = ASIS_POR, prov_nac = PRO_NAC, 
+         cant_nac = CAN_NAC, parr_nac = PAR_NAC, area_nac = AREA_NAC, edad_mad = EDAD_MAD,
+         hij_viv = HIJOSVIV, hij_vivm = HVIVMUE, hij_nacm = HNACMUE, etnia = P_ETNICA,
+         est_civil = EST_CIV, sabe_leer = LEE, niv_inst = NIV_INST, prov_res = PRO_RES,
+         cant_res = CAN_RES, parr_res = PAR_RES, area_res = AREA_RES, residente = RESIDENT,
+         p_emb = TIPO_PAR) %>% 
+  dplyr::select(-ACTA_INS, -ATEN_MED, -OFI_INSC, -REG_INSC, -ENCUESTA, DIAM_CEF) %>% 
+  mutate(anio_insc = as.numeric(anio_insc)) %>% 
+  mutate(mes_insc = as.numeric(as.character(mes_insc))) %>% 
+  mutate(sexo = as.numeric(as.character(sexo))) %>% 
+  mutate(anio_nac = as.numeric(anio_nac)) %>% 
+  mutate(mes_nac = as.numeric(as.character(mes_nac))) %>% 
+  mutate(p_emb = as.numeric(as.character(p_emb))) %>% 
+  mutate(lugar_ocur = as.numeric(as.character(lugar_ocur))) %>% 
+  mutate(asis_por = as.numeric(as.character(asis_por))) %>% 
+  mutate(area_nac = as.numeric(as.character(area_nac))) %>% 
+  mutate(etnia = as.numeric(as.character(etnia))) %>% 
+  mutate(est_civil = as.numeric(as.character(est_civil))) %>% 
+  mutate(sabe_leer = as.numeric(as.character(sabe_leer))) %>% 
+  mutate(niv_inst = as.numeric(as.character(niv_inst))) %>% 
+  mutate(area_res = as.numeric(as.character(area_res))) %>% 
+  mutate(residente = as.numeric(as.character(residente)))
 
 
 env2014_2019 <- bind_rows(env2014, env2015_2019)
 env2013_2019 <- bind_rows(env2013, env2014_2019)
 env2012_2019 <- bind_rows(env2012, env2013_2019)
-sum(env2012_2019$anio_nac > 2011)
+env2011_2019 <- bind_rows(env2011, env2012_2019)
+env2010_2019 <- bind_rows(env2010, env2011_2019)
+env2009_2019 <- bind_rows(env2009, env2010_2019)
+
+#OJO FEB 1, OJO ETNIA Y LUIGAR OCURR NO SON CONISTENTES! hay que arreglar en 2010 y 2009
+
+
+
+
+
+
+tenv2012_2019 <- t(t(sapply(env2012_2019, class)))
+tenv2012_2019 <- as.data.frame(tenv2012_2019)
+
+tenv2011_2019 <- t(t(sapply(env2011_2019, class)))
+tenv2011_2019 <- as.data.frame(tenv2011_2019)
+
+tenv2010_2019 <- t(t(sapply(env2010_2019, class)))
+tenv2010_2019 <- as.data.frame(tenv2010_2019)
+
+
+
 
 ## Not including previous years data bases as covariates of interest not available for edf before 2012
 #Filtering those who were born before the study period 
@@ -292,30 +395,36 @@ boxplot(env2012_2019$peso ~ env2012_2019$area_res)
 
 
 ##Intial exploration outocome variable (peso) January 31, 2020
+## Only those with plausible weight and sem_gest (excluding 99 and 9999
+## Creating variables for preterm (less than 37 weeks), and 
 
-env2012_2019Box <- env2012_2019 %>% 
-  filter(peso > 99 & peso < 9999 & sem_gest <99)
+env2012_2019vp <- env2012_2019 %>% 
+  filter(peso > 99 & peso < 9999 & sem_gest <99) %>% 
+  mutate(etnia = as.factor(etnia)) %>%
+  mutate(niv_inst = as.factor(niv_inst)) %>% 
+  mutate(lbw = as.factor(case_when(peso >=2500 ~ "0",
+                             peso < 2500 ~ "1"))) %>% 
+  mutate(preterm = as.factor(case_when(sem_gest >= 37 ~ "0",
+                                       sem_gest < 37 ~ "1")))
+  
 
-env2012_2019Box$etnia <- as.factor(env2012_2019Box$etnia)
-env2012_2019Box$niv_inst <- as.factor(env2012_2019Box$niv_inst)
 
 
-boxplot(env2012_2019Box$peso ~ env2012_2019Box$area_res)
-boxplot(env2012_2019Box$peso ~ env2012_2019Box$etnia)
-plot(env2012_2019Box$peso, env2012_2019Box$sem_gest)
-cor(env2012_2019Box$peso, env2012_2019Box$sem_gest)
+boxplot(env2012_2019vp$peso ~ env2012_2019Box$area_res)
+boxplot(env2012_2019vp$peso ~ env2012_2019Box$etnia)
+plot(env2012_2019vp$peso, env2012_2019Box$sem_gest)
+cor(env2012_2019vp$peso, env2012_2019Box$sem_gest)
 
-lm_peso_etnia <- lm(env2012_2019Box$peso ~ env2012_2019Box$etnia)
+lm_peso_etnia <- lm(env2012_2019vp$peso ~ env2012_2019Box$etnia)
 summary(lm_peso_etnia)
 
-lm_peso_nivinst <- lm(env2012_2019Box$peso ~ env2012_2019Box$niv_inst)
+lm_peso_nivinst <- lm(env2012_2019vp$peso ~ env2012_2019Box$niv_inst)
 summary(lm_peso_nivinst)
 
-lm_peso_edad <- lm(env2012_2019Box$peso ~ env2012_2019Box$edad_mad)
+lm_peso_edad <- lm(env2012_2019vp$peso ~ env2012_2019Box$edad_mad)
 summary(lm_peso_edad)
 
-quantile(env2012_2019Box$peso, prob = c(0.1, 0.25, 0.5, 0.75, 0.90))
-sum(env2012_2019Box$peso > 2500)
+quantile(env2012_2019vp$peso, prob = c(0.1, 0.25, 0.5, 0.75, 0.90))
 
 
 ##### Missing: checking NA (when the birth registered is from an earlier year it does not have the covariates) 
