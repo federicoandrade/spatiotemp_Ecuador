@@ -227,7 +227,8 @@ env2000 <- read_sav("Data/ENV_2000.sav")
 #tenv2012 <- t(t(sapply(env2012, class)))
 #tenv2011 <- t(t(sapply(env2011, class)))
 #tenv2010 <- t(t(sapply(env2010, class)))
-tenv2009 <- t(t(sapply(env2009, class)))
+#tenv2009 <- t(t(sapply(env2009, class)))
+tenv2008 <- t(t(sapply(env2008, class)))
 
 #tenv2019 <- as.data.frame(tenv2019)
 #tenv2018 <- as.data.frame(tenv2018)
@@ -239,7 +240,9 @@ tenv2009 <- t(t(sapply(env2009, class)))
 #tenv2012 <- as.data.frame(tenv2012)
 #tenv2011 <- as.data.frame(tenv2011)
 #tenv2010 <- as.data.frame(tenv2010)
-tenv2009 <- as.data.frame(tenv2009)
+#tenv2009 <- as.data.frame(tenv2009)
+tenv2008 <- as.data.frame(tenv2008)
+
 
 ######## Changing variables clasess for binding 
 
@@ -313,7 +316,10 @@ env2010 <- env2010 %>%
   mutate(sabe_leer = as.numeric(as.character(sabe_leer))) %>% 
   mutate(niv_inst = as.numeric(as.character(niv_inst))) %>% 
   mutate(area_res = as.numeric(as.character(area_res))) %>% 
-  mutate(residente = as.numeric(as.character(residente)))
+  mutate(residente = as.numeric(as.character(residente))) %>% 
+  within(etnia[etnia == "0"] <- "9") %>% 
+  within(lugar_ocur[lugar_ocur == "0"] <- "9")
+  
 
 env2009 <- env2009 %>% 
   rename(prov_insc = PROV_INS, cant_insc = CAN_INSC, parr_insc = PAR_INSC,
@@ -325,7 +331,7 @@ env2009 <- env2009 %>%
          est_civil = EST_CIV, sabe_leer = LEE, niv_inst = NIV_INST, prov_res = PRO_RES,
          cant_res = CAN_RES, parr_res = PAR_RES, area_res = AREA_RES, residente = RESIDENT,
          p_emb = TIPO_PAR) %>% 
-  dplyr::select(-ACTA_INS, -ATEN_MED, -OFI_INSC, -REG_INSC, -ENCUESTA, DIAM_CEF) %>% 
+  dplyr::select(-ACTA_INS, -ATEN_MED, -OFI_INSC, -REG_INSC, -ENCUESTA, -DIAM_CEF) %>% 
   mutate(anio_insc = as.numeric(anio_insc)) %>% 
   mutate(mes_insc = as.numeric(as.character(mes_insc))) %>% 
   mutate(sexo = as.numeric(as.character(sexo))) %>% 
@@ -340,13 +346,62 @@ env2009 <- env2009 %>%
   mutate(sabe_leer = as.numeric(as.character(sabe_leer))) %>% 
   mutate(niv_inst = as.numeric(as.character(niv_inst))) %>% 
   mutate(area_res = as.numeric(as.character(area_res))) %>% 
+  mutate(residente = as.numeric(as.character(residente))) %>% 
+  within(etnia[etnia == "0"] <- "9") %>% 
+  within(lugar_ocur[lugar_ocur == "0"] <- "9")
+
+env2008 <- env2008 %>% 
+  rename(prov_insc = PROV_INS, cant_insc = CAN_INSC, parr_insc = PAR_INSC,
+         anio_insc = ANIO_INS, mes_insc = MES_INSC, sexo = SEXO, talla = TALLA,
+         peso = PESO, anio_nac = ANIO_NAC, mes_nac = MES_NACI, sem_gest = SEM_GEST,
+         lugar_ocur = LUG_ACAE, asis_por = ASIS_POR, prov_nac = PRO_NAC, 
+         cant_nac = CAN_NAC, parr_nac = PAR_NAC, area_nac = AREA_NAC, edad_mad = EDAD_MAD,
+         hij_viv = HIJOSVIV, hij_vivm = HVIVMUE, hij_nacm = HNACMUE,
+         sabe_leer = LEE, niv_inst = NIV_INST, prov_res = PRO_RES,
+         cant_res = CAN_RES, parr_res = PAR_RES, area_res = AREA_RES, residente = RESIDENT,
+         p_emb = TIPO_PAR) %>% 
+  dplyr::select(-ESTADIST, -REG_INSC, -ACTA_INS, -OFI_INSC, -APGAR1, -APGAR2, -ATEN_MED, -DIAM_CEF, -INSCRIBE) %>% 
+  mutate(anio_insc = as.numeric(anio_insc)) %>% 
+  mutate(mes_insc = as.numeric(as.character(mes_insc))) %>% 
+  mutate(sexo = as.numeric(as.character(sexo))) %>% 
+  mutate(anio_nac = as.numeric(anio_nac)) %>% 
+  mutate(mes_nac = as.numeric(as.character(mes_nac))) %>% 
+  mutate(p_emb = as.numeric(as.character(p_emb))) %>% 
+  mutate(lugar_ocur = as.numeric(as.character(lugar_ocur))) %>% 
+  mutate(asis_por = as.numeric(as.character(asis_por))) %>% 
+  mutate(area_nac = as.numeric(as.character(area_nac))) %>% 
+  mutate(sabe_leer = as.numeric(as.character(sabe_leer))) %>% 
+  mutate(niv_inst = as.numeric(as.character(niv_inst))) %>% 
+  mutate(area_res = as.numeric(as.character(area_res))) %>% 
   mutate(residente = as.numeric(as.character(residente)))
+
+#REVISAR DIFERENCE LUGAR ACAE Y LUGAR OCUR, u otros con NADA en 2008 FEB 2
+
+
 
 
 env2014_2019 <- bind_rows(env2014, env2015_2019)
 env2013_2019 <- bind_rows(env2013, env2014_2019)
 env2012_2019 <- bind_rows(env2012, env2013_2019)
 env2011_2019 <- bind_rows(env2011, env2012_2019)
+
+env2011_2019 <- env2011_2019 %>% 
+  within(etnia[etnia == "3"] <- "2") %>% 
+  within(etnia[etnia == "4"] <- "2") %>% 
+  within(etnia[etnia == "5"] <- "3") %>% 
+  within(etnia[etnia == "6"] <- "3") %>% 
+  within(etnia[etnia == "7"] <- "4") %>% 
+  within(etnia[etnia == "8"] <- "4") %>% 
+  mutate(lugar_ocur = as.numeric(lugar_ocur)) %>% 
+  within(lugar_ocur[lugar_ocur == "3"] <- "8") %>% 
+  within(lugar_ocur[lugar_ocur == "4"] <- "3") %>% 
+  within(lugar_ocur[lugar_ocur == "5"] <- "4") %>% 
+  within(lugar_ocur[lugar_ocur == "6"] <- "5") %>% 
+  within(lugar_ocur[lugar_ocur == "7"] <- "6") %>% 
+  within(lugar_ocur[lugar_ocur == "8"] <- "6")
+
+
+
 env2010_2019 <- bind_rows(env2010, env2011_2019)
 env2009_2019 <- bind_rows(env2009, env2010_2019)
 
@@ -366,6 +421,8 @@ tenv2011_2019 <- as.data.frame(tenv2011_2019)
 tenv2010_2019 <- t(t(sapply(env2010_2019, class)))
 tenv2010_2019 <- as.data.frame(tenv2010_2019)
 
+tenv2009_2019 <- t(t(sapply(env2009_2019, class)))
+tenv2009_2019 <- as.data.frame(tenv2009_2019)
 
 
 
