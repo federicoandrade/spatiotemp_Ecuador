@@ -6,6 +6,7 @@ library(sf)
 library(rgeos)
 library(geosphere)
 library(rgdal)
+library(raster)
 
 #library(raster)
 #####
@@ -428,6 +429,7 @@ env2009_2019 <- bind_rows(env2009, env2010_2019)
 ##   - Singleton, only one baby
 #    - tipo parto? solo los que no son cesarea?
 #    - Numero embarazos? menosr que 15? Numero hijos antes? Pregunta para grupo. 
+#    -Adding cantones location infromation
 #   
 ## 2. Excluding years with Invalid outcome (peso 99 nd 9999, sem gest 99)
 ## 2a. Create Binary variables with outcomes. 
@@ -468,8 +470,37 @@ env2009_2019 <- env2009_2019 %>%
 nrow(env2009_2019)
 
 #Only cesarea? Not sure how good the data quality is.
-# WHO recomendations is 10-15% ....At popo level Above 10% there is no benefit of cesarea on morality...
+# WHO recomendations is 10-15% ....At pop level Above 10% there is no benefit of cesarea on morality...
 table(env2009_2019$tipo_part)
+
+
+# Explore need of including territories not classified. Are there cases there?
+
+sum((env2009_2019_GES$cant_res == "9001"| env2009_2019_GES$cant_res == "9002" | env2009_2019_GES$cant_res == "9003") 
+    & env2009_2019_GES$lbw == "1")
+
+#Including cantones location variables INFO
+cantones_shp <- readOGR("Data/Cantones2014_INEC", "nxcantones")
+#plot(cantones_shp)
+centroidCant <- gCentroid(cantones_shp, byid = TRUE)
+
+SpDF_centroid <- SpatialPointsDataFrame(centroidCant, cantones_shp@data)
+SpDF_centroid 
+
+
+CantCentr_df <- as.data.frame(SpDF_centroid)
+
+CantCentr_df <- CantCentr_df %>% dplyr::select(DPA_CANTON, DPA_DESCAN, x, y) 
+
+save(CantCentr_df, file = "Data/EcuadorCantCent.RData")
+
+class(CantCentr_df$x)
+class(CantCentr_df$y)
+
+env2009_2019 <- env2009_2019  %>% left_join(y = CantCentr_df, by = c("cant_res" = "DPA_CANTON")) %>% 
+  rename(CordXres = x, CordYres = y, Nom_CantRes = DPA_DESCAN)
+
+
 
 
 #2 and 2a
@@ -477,13 +508,23 @@ table(env2009_2019$tipo_part)
 # 37 is based on  literature.
 #"with extreme or implausible gestational ages (<20 weeks or >45 weeks)" (Ling, 2018)
 # "or birthweights (<500 g or >6800 g)" (Ling, 2018)
+# Variable par_previo SI = 1, NO = 0
 
 env2009_2019_LBW <- env2009_2019 %>% 
   filter(peso > 499 & peso < 6800)  %>% 
   mutate(lbw = as.factor(case_when(peso >=2500 ~ "0",
                                    peso < 2500 ~ "1"))) %>% 
   mutate(preterm = as.factor(case_when(sem_gest >= 37 ~ "0",
-                                       sem_gest < 37 ~ "1")))  
+                                       sem_gest < 37 ~ "1")))  %>% 
+  mutate(edad_cat = as.factor(case_when(edad_mad < 20 ~ "1", 
+                                        edad_mad >= 20 & edad_mad < 35 ~ "2",
+                                        edad_mad >= 35 ~ "3"))) %>% 
+  mutate(niv_inst_cat = as.factor(case_when(niv_inst == 0 | niv_inst == 1 | niv_inst == 2 |niv_inst == 3| niv_inst == 4 ~ "1", 
+                                        niv_inst == 5 |niv_inst == 6 |niv_inst == 7 |niv_inst == 8 ~ "2",
+                                        niv_inst == 9 ~ "9"))) %>% 
+  mutate(par_previo = as.factor(case_when(num_par == 1  ~ "0", 
+                                          num_par > 1 & num_par < 99  ~ "1")))
+
 nrow(env2009_2019_LBW)
 
 env2009_2019_GES <- env2009_2019 %>% 
@@ -491,7 +532,15 @@ env2009_2019_GES <- env2009_2019 %>%
   mutate(lbw = as.factor(case_when(peso >=2500 ~ "0",
                                    peso < 2500 ~ "1"))) %>% 
   mutate(preterm = as.factor(case_when(sem_gest >= 37 ~ "0",
-                                       sem_gest < 37 ~ "1")))
+                                       sem_gest < 37 ~ "1"))) %>% 
+  mutate(edad_cat = as.factor(case_when(edad_mad < 20 ~ "1", 
+                                        edad_mad >= 20 & edad_mad < 35 ~ "2",
+                                        edad_mad >= 35 ~ "3"))) %>% 
+  mutate(niv_inst_cat = as.factor(case_when(niv_inst == 0 | niv_inst == 1 | niv_inst == 2 |niv_inst == 3| niv_inst == 4 ~ "1", 
+                                            niv_inst == 5 |niv_inst == 6 |niv_inst == 7 |niv_inst == 8 ~ "2",
+                                            niv_inst == 9 ~ "9"))) %>% 
+  mutate(par_previo = as.factor(case_when(num_par == 1  ~ "0", 
+                                          num_par > 1 & num_par < 99  ~ "1")))
 
 nrow(env2009_2019_GES)
 
@@ -508,38 +557,50 @@ tenv2009_2019 <- as.data.frame(tenv2009_2019)
 sum(is.na(env2009_2019_GES$edad_mad))
 sum(is.na(env2009_2019_LBW$edad_mad))
 
+
 #etnia
 sum(is.na(env2009_2019_GES$etnia))
 sum(is.na(env2009_2019_LBW$etnia))
+
 
 #nivel educacion
 sum(is.na(env2009_2019_GES$niv_inst))
 sum(is.na(env2009_2019_LBW$niv_inst))
 
+env2009_2019_LBW <- env2009_2019_LBW %>% 
+  filter(!is.na(niv_inst))
 
-#Numero de partos previos
+env2009_2019_GES <- env2009_2019_GES %>% 
+  filter(!is.na(niv_inst))
+
+#Numero de partos previos (DIFFERENT DATA SETS, because I loose too many)
 summary(env2009_2019_GES$num_par)
 table(env2009_2019_GES$num_par)
 
 summary(env2009_2019_LBW$num_par)
 table(env2009_2019_LBW$num_par)
 
+sum(is.na(env2009_2019_GES$num_par))
+sum(is.na(env2009_2019_LBW$num_par))
 
-#Too many NAs, cannot rely on this variable
+env2009_2019_LBW_par <- env2009_2019_LBW %>% 
+  filter(!is.na(num_par))
 
-table(env2009_2019_GES$hij_vivm)
-table(env2009_2019_LBW$hij_vivm)
+env2009_2019_GES_par <- env2009_2019_GES %>% 
+  filter(!is.na(num_par))
 
-## Filtering out missing chosen variables for SATSCAN
-
-## TO DO February 3. 
-# 1. Filter cases missing o fcovariates for sat scan
-# 2. Subset for the variables to be used
-# 3. Include cantones INFO
-# 4. Create unadjusted and adjusted clusters. 
-# 5. Run satScan 
+##################################################
+####### SAT, Preparing files for SatScan
+##################################################
 
 
+# 6. Run satScan 
+
+
+
+
+
+##Intial exploration outocome variable (peso) 
 hist(env2009_2019$peso)
 sum(is.na(env2009_2019$peso))
 sum(is.na(env2009_2019$num_emb))
@@ -557,23 +618,6 @@ table(env2009_2019$con_pren)
 table(env2009_2019$area_res)
 
 boxplot(env2009_2019$peso ~ env2012_2019$area_res)
-
-
-
-##Intial exploration outocome variable (peso) 
-## Only those with plausible weight and sem_gest (excluding 99 and 9999
-## Creating variables for preterm (less than 37 weeks), and 
-
-env2009_2019 <- env2009_2019 %>% 
-  filter(peso > 99 & peso < 9999 & sem_gest <99) %>% 
-  mutate(etnia = as.factor(etnia)) %>%
-  mutate(niv_inst = as.factor(niv_inst)) %>% 
-  mutate(lbw = as.factor(case_when(peso >=2500 ~ "0",
-                             peso < 2500 ~ "1"))) %>% 
-  mutate(preterm = as.factor(case_when(sem_gest >= 37 ~ "0",
-                                       sem_gest < 37 ~ "1")))
-  
-
 
 
 boxplot(env2009_2019$peso ~ env2009_2019$area_res)

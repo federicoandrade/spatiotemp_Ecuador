@@ -283,9 +283,11 @@ eg_2011_2019_all <- eg2011_2019 %>%
 #### 1. Con GADM, dejar por fuera las golondrinas, manga del cura, y el piedrero (9001, 9003, 9004)
 #### 2. Con el shapefile de gabi, debo cambiar el 0808 al 2302
 #### NOTA: EN CUALQUIER CASO EL ARCHIVO DE PROYEC POBLACION DEBO CAMBIAR 0808 a 2302 
-
 ## Verificando si hay algún caso en los territorios que no son cantón
 #9001, 9003, 9004
+
+#### FEB 5/2021 Actualizacion --> Todo lo de arriba solucionado cambiando en el shapefile
+### La Concordia de 0808 al 2302 
 
 
 sum(childLeuk$cant_res == "9001"| childLeuk$cant_res == "9002" | childLeuk$cant_res == "9003")
@@ -293,7 +295,6 @@ sum(parkinsons$cant_res == "9001"| parkinsons$cant_res == "9002" | parkinsons$ca
 sum(NHlym$cant_res == "9001"| NHlym$cant_res == "9002" | NHlym$cant_res == "9003")
 sum(edf2011_2019$cant_res == "9001"| edf2011_2019$cant_res == "9002" | edf2011_2019$cant_res == "9003") # Ni total ni ninguna enfermedad
 
-### Puedo usar GADM si confío más. Podría ser más confiable?
 
 
 
