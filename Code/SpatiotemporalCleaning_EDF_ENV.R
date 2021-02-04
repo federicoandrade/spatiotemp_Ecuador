@@ -227,7 +227,7 @@ env2008 <- read_sav("Data/ENV_2008.sav")
 #tenv2011 <- t(t(sapply(env2011, class)))
 #tenv2010 <- t(t(sapply(env2010, class)))
 #tenv2009 <- t(t(sapply(env2009, class)))
-tenv2008 <- t(t(sapply(env2008, class)))
+#tenv2008 <- t(t(sapply(env2008, class)))
 
 #tenv2019 <- as.data.frame(tenv2019)
 #tenv2018 <- as.data.frame(tenv2018)
@@ -240,7 +240,7 @@ tenv2008 <- t(t(sapply(env2008, class)))
 #tenv2011 <- as.data.frame(tenv2011)
 #tenv2010 <- as.data.frame(tenv2010)
 #tenv2009 <- as.data.frame(tenv2009)
-tenv2008 <- as.data.frame(tenv2008)
+#tenv2008 <- as.data.frame(tenv2008)
 
 
 ######## Changing variables clasess for binding 
@@ -355,30 +355,30 @@ env2009 <- env2009 %>%
   within(etnia[etnia == "0"] <- "9") %>% 
   within(lugar_ocur[lugar_ocur == "0"] <- "9")
 
-env2008 <- env2008 %>% 
-  rename(prov_insc = PROV_INS, cant_insc = CAN_INSC, parr_insc = PAR_INSC,
-         anio_insc = ANIO_INS, mes_insc = MES_INSC, sexo = SEXO, talla = TALLA,
-         peso = PESO, anio_nac = ANIO_NAC, mes_nac = MES_NACI, sem_gest = SEM_GEST,
-         lugar_ocur = LUG_ACAE, asis_por = ASIS_POR, prov_nac = PRO_NAC, 
-         cant_nac = CAN_NAC, parr_nac = PAR_NAC, area_nac = AREA_NAC, edad_mad = EDAD_MAD,
-         hij_viv = HIJOSVIV, hij_vivm = HVIVMUE, hij_nacm = HNACMUE,
-         sabe_leer = LEE, niv_inst = NIV_INST, prov_res = PRO_RES,
-         cant_res = CAN_RES, parr_res = PAR_RES, area_res = AREA_RES, residente = RESIDENT,
-         p_emb = TIPO_PAR) %>% 
-  dplyr::select(-ESTADIST, -REG_INSC, -ACTA_INS, -OFI_INSC, -APGAR1, -APGAR2, -ATEN_MED, -DIAM_CEF, -INSCRIBE) %>% 
-  mutate(anio_insc = as.numeric(anio_insc)) %>% 
-  mutate(mes_insc = as.numeric(as.character(mes_insc))) %>% 
-  mutate(sexo = as.numeric(as.character(sexo))) %>% 
-  mutate(anio_nac = as.numeric(anio_nac)) %>% 
-  mutate(mes_nac = as.numeric(as.character(mes_nac))) %>% 
-  mutate(p_emb = as.numeric(as.character(p_emb))) %>% 
-  mutate(lugar_ocur = as.numeric(as.character(lugar_ocur))) %>% 
-  mutate(asis_por = as.numeric(as.character(asis_por))) %>% 
-  mutate(area_nac = as.numeric(as.character(area_nac))) %>% 
-  mutate(sabe_leer = as.numeric(as.character(sabe_leer))) %>% 
-  mutate(niv_inst = as.numeric(as.character(niv_inst))) %>% 
-  mutate(area_res = as.numeric(as.character(area_res))) %>% 
-  mutate(residente = as.numeric(as.character(residente)))
+#env2008 <- env2008 %>% 
+ # rename(prov_insc = PROV_INS, cant_insc = CAN_INSC, parr_insc = PAR_INSC,
+  #       anio_insc = ANIO_INS, mes_insc = MES_INSC, sexo = SEXO, talla = TALLA,
+   #      peso = PESO, anio_nac = ANIO_NAC, mes_nac = MES_NACI, sem_gest = SEM_GEST,
+    #     lugar_ocur = LUG_ACAE, asis_por = ASIS_POR, prov_nac = PRO_NAC, 
+     #    cant_nac = CAN_NAC, parr_nac = PAR_NAC, area_nac = AREA_NAC, edad_mad = EDAD_MAD,
+      #   hij_viv = HIJOSVIV, hij_vivm = HVIVMUE, hij_nacm = HNACMUE,
+       #  sabe_leer = LEE, niv_inst = NIV_INST, prov_res = PRO_RES,
+        # cant_res = CAN_RES, parr_res = PAR_RES, area_res = AREA_RES, residente = RESIDENT,
+         #p_emb = TIPO_PAR) %>% 
+#  dplyr::select(-ESTADIST, -REG_INSC, -ACTA_INS, -OFI_INSC, -APGAR1, -APGAR2, -ATEN_MED, -DIAM_CEF, -INSCRIBE) %>% 
+ # mutate(anio_insc = as.numeric(anio_insc)) %>% 
+  #mutate(mes_insc = as.numeric(as.character(mes_insc))) %>% 
+  #mutate(sexo = as.numeric(as.character(sexo))) %>% 
+  #mutate(anio_nac = as.numeric(anio_nac)) %>% 
+  #mutate(mes_nac = as.numeric(as.character(mes_nac))) %>% 
+  #mutate(p_emb = as.numeric(as.character(p_emb))) %>% 
+  #mutate(lugar_ocur = as.numeric(as.character(lugar_ocur))) %>% 
+  #mutate(asis_por = as.numeric(as.character(asis_por))) %>% 
+  #mutate(area_nac = as.numeric(as.character(area_nac))) %>% 
+  #mutate(sabe_leer = as.numeric(as.character(sabe_leer))) %>% 
+  #mutate(niv_inst = as.numeric(as.character(niv_inst))) %>% 
+  #mutate(area_res = as.numeric(as.character(area_res))) %>% 
+  #mutate(residente = as.numeric(as.character(residente)))
 
 
 env2014_2019 <- bind_rows(env2014, env2015_2019)
@@ -418,6 +418,35 @@ env2009_2019 <- bind_rows(env2009, env2010_2019)
 
 
 
+
+
+####################################################################################
+#####FILTERING 2009-2019 ONLY National residentes for the LBW clusters, and the gestational age (Separately)
+## 1.Excluding: 
+#    - Excluding years before the the time range of interest.
+##   - international residence (making cantones consistent)
+##   - Singleton, only one baby
+#    - tipo parto? solo los que no son cesarea?
+#    - Numero embarazos? menosr que 15? Numero hijos antes? Pregunta para grupo. 
+#   
+## 2. Excluding years with Invalid outcome (peso 99 nd 9999, sem gest 99)
+## 2a. Create Binary variables with outcomes. 
+# 3. Excluding years with invalid main explanatory variable (cant_res) 
+# and cant_res international
+# 4. Excluding years with invalid covariates
+# 5. filtering out unused variables
+
+
+env2009_2019 <- bind_rows(env2009, env2010_2019)
+nrow(env2009_2019)
+
+#1.
+
+# Filter Time range of interest
+env2009_2019 <- env2009_2019 %>%
+  filter(anio_nac >= 2009)
+nrow(env2009_2019)
+
 #Renaming CANTON 8800 (Exterior)
 #Haciendo consistente La concordia, antes 0808 ahora 2302 provincia 23
 
@@ -425,17 +454,91 @@ sum(env2009_2019$cant_res == "8800")
 sum(env2009_2019$cant_res == "0808")
 # NO missing, son "8800" que significa EXTERIOR. Puedo quitarlos =)
 
-
-env2009_2019 <- env2011_2019 %>% subset(cant_res != "8800") %>% 
+env2009_2019 <- env2009_2019 %>% subset(cant_res != "8800") %>% 
   mutate(prov_insc = replace(prov_insc, cant_insc == "0808", "23")) %>% 
   mutate(prov_res = replace(prov_res, cant_res == "0808", "23")) %>%
   within(cant_insc[cant_insc == "0808"] <- "2302") %>% 
   within(cant_res[cant_res == "0808"] <- "2302") 
 
+nrow(env2009_2019)
+
+#Only Singleton
+env2009_2019 <- env2009_2019 %>%
+  filter(p_emb == 1)
+nrow(env2009_2019)
+
+#Only cesarea? Not sure how good the data quality is.
+# WHO recomendations is 10-15% ....At popo level Above 10% there is no benefit of cesarea on morality...
+table(env2009_2019$tipo_part)
 
 
-env2009_2019 <- env2012_2019 %>%
-              filter(anio_nac > 2009)
+#2 and 2a
+# 2500 cut off is based on 10th percentile from peso. 
+# 37 is based on  literature.
+#"with extreme or implausible gestational ages (<20 weeks or >45 weeks)" (Ling, 2018)
+# "or birthweights (<500 g or >6800 g)" (Ling, 2018)
+
+env2009_2019_LBW <- env2009_2019 %>% 
+  filter(peso > 499 & peso < 6800)  %>% 
+  mutate(lbw = as.factor(case_when(peso >=2500 ~ "0",
+                                   peso < 2500 ~ "1"))) %>% 
+  mutate(preterm = as.factor(case_when(sem_gest >= 37 ~ "0",
+                                       sem_gest < 37 ~ "1")))  
+nrow(env2009_2019_LBW)
+
+env2009_2019_GES <- env2009_2019 %>% 
+  filter(sem_gest <45 | sem_gest > 20) %>% 
+  mutate(lbw = as.factor(case_when(peso >=2500 ~ "0",
+                                   peso < 2500 ~ "1"))) %>% 
+  mutate(preterm = as.factor(case_when(sem_gest >= 37 ~ "0",
+                                       sem_gest < 37 ~ "1")))
+
+nrow(env2009_2019_GES)
+
+#3
+sum(is.na(env2009_2019_GES$cant_res))
+sum(is.na(env2009_2019_LBW$cant_res))
+
+# 4.Covariates
+tenv2009_2019 <- t(t(sapply(env2009_2019, class)))
+
+tenv2009_2019 <- as.data.frame(tenv2009_2019)
+
+# age
+sum(is.na(env2009_2019_GES$edad_mad))
+sum(is.na(env2009_2019_LBW$edad_mad))
+
+#etnia
+sum(is.na(env2009_2019_GES$etnia))
+sum(is.na(env2009_2019_LBW$etnia))
+
+#nivel educacion
+sum(is.na(env2009_2019_GES$niv_inst))
+sum(is.na(env2009_2019_LBW$niv_inst))
+
+
+#Numero de partos previos
+summary(env2009_2019_GES$num_par)
+table(env2009_2019_GES$num_par)
+
+summary(env2009_2019_LBW$num_par)
+table(env2009_2019_LBW$num_par)
+
+
+#Too many NAs, cannot rely on this variable
+
+table(env2009_2019_GES$hij_vivm)
+table(env2009_2019_LBW$hij_vivm)
+
+## Filtering out missing chosen variables for SATSCAN
+
+## TO DO February 3. 
+# 1. Filter cases missing o fcovariates for sat scan
+# 2. Subset for the variables to be used
+# 3. Include cantones INFO
+# 4. Create unadjusted and adjusted clusters. 
+# 5. Run satScan 
+
 
 hist(env2009_2019$peso)
 sum(is.na(env2009_2019$peso))
@@ -489,5 +592,3 @@ summary(lm_peso_edad)
 
 quantile(env2009_2019$peso, prob = c(0.1, 0.25, 0.5, 0.75, 0.90))
 
-
-##### Missing: checking NA (when the birth registered is from an earlier year it does not have the covariates) 
