@@ -34,7 +34,7 @@ pest_intox2011_2019 <- eg2011_2019_extVar %>% filter(str_detect(cau_cie10, "T60"
 
 pest2011_2019CAS <- pest_intox2011_2019 %>% 
   mutate(numberCases = rep(1)) %>% 
-  select(cant_res, numberCases, anio_ingr)  %>% 
+  dplyr::select(cant_res, numberCases, anio_ingr)  %>% 
   filter(cant_res != "2302")
 
 write.table(pest2011_2019CAS, "Data/SatscanFiles/pest2011_2019CAS.txt", sep= " ", 
@@ -43,7 +43,7 @@ write.table(pest2011_2019CAS, "Data/SatscanFiles/pest2011_2019CAS.txt", sep= " "
 ##### Geo file
 
 pest_2011_2019GEO <- CantCentr_df %>% 
-  select(DPA_CANTON, x, y) %>% 
+  dplyr::select(DPA_CANTON, x, y) %>% 
   filter(DPA_CANTON != "2302")
 
 pest_2011_2019GEO <- as.data.frame(pest_2011_2019GEO)

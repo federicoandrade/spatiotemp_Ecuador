@@ -590,11 +590,14 @@ env2009_2019_GES_par <- env2009_2019_GES %>%
   filter(!is.na(num_par))
 
 ##################################################
-####### SAT, Preparing files for SatScan
+####### Saving files for preparing for SATSCAN
 ##################################################
 
-
-# 6. Run satScan 
+#save(env2009_2019, file = "Data/env2009_2019.RData")
+#save(env2009_2019_LBW, file = "Data/env2009_2019_LBW.RData")
+#save(env2009_2019_LBW_par, file = "Data/env2009_2019_LBW_par.RData")
+#save(env2009_2019_GES, file = "Data/env2009_2019_GES.RData")
+#save(env2009_2019_GES_par, file = "Data/env2009_2019_GES_par.RData")
 
 
 
