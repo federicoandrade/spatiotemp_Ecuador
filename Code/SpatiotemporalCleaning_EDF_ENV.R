@@ -217,30 +217,30 @@ env2008 <- read_sav("Data/ENV_2008.sav")
 ##### Checking consistency in variables and variable's names across years
 
 
-#tenv2019 <- t(t(sapply(env2019, class)))
-#tenv2018 <- t(t(sapply(env2018, class)))
-#tenv2017 <- t(t(sapply(env2017, class)))
-#tenv2016 <- t(t(sapply(env2016, class)))
-#tenv2015 <- t(t(sapply(env2015, class)))
-#tenv2014 <- t(t(sapply(env2014, class)))
-#tenv2013 <- t(t(sapply(env2013, class)))
-#tenv2012 <- t(t(sapply(env2012, class)))
-#tenv2011 <- t(t(sapply(env2011, class)))
-#tenv2010 <- t(t(sapply(env2010, class)))
-#tenv2009 <- t(t(sapply(env2009, class)))
+tenv2019 <- t(t(sapply(env2019, class)))
+tenv2018 <- t(t(sapply(env2018, class)))
+tenv2017 <- t(t(sapply(env2017, class)))
+tenv2016 <- t(t(sapply(env2016, class)))
+tenv2015 <- t(t(sapply(env2015, class)))
+tenv2014 <- t(t(sapply(env2014, class)))
+tenv2013 <- t(t(sapply(env2013, class)))
+tenv2012 <- t(t(sapply(env2012, class)))
+tenv2011 <- t(t(sapply(env2011, class)))
+tenv2010 <- t(t(sapply(env2010, class)))
+tenv2009 <- t(t(sapply(env2009, class)))
 #tenv2008 <- t(t(sapply(env2008, class)))
 
-#tenv2019 <- as.data.frame(tenv2019)
-#tenv2018 <- as.data.frame(tenv2018)
-#tenv2017 <- as.data.frame(tenv2017)
-#tenv2016 <- as.data.frame(tenv2016)
-#tenv2015 <- as.data.frame(tenv2015)
-#tenv2014 <- as.data.frame(tenv2014)
-#tenv2013 <- as.data.frame(tenv2013)
-#tenv2012 <- as.data.frame(tenv2012)
-#tenv2011 <- as.data.frame(tenv2011)
-#tenv2010 <- as.data.frame(tenv2010)
-#tenv2009 <- as.data.frame(tenv2009)
+tenv2019 <- as.data.frame(tenv2019)
+tenv2018 <- as.data.frame(tenv2018)
+tenv2017 <- as.data.frame(tenv2017)
+tenv2016 <- as.data.frame(tenv2016)
+tenv2015 <- as.data.frame(tenv2015)
+tenv2014 <- as.data.frame(tenv2014)
+tenv2013 <- as.data.frame(tenv2013)
+tenv2012 <- as.data.frame(tenv2012)
+tenv2011 <- as.data.frame(tenv2011)
+tenv2010 <- as.data.frame(tenv2010)
+tenv2009 <- as.data.frame(tenv2009)
 #tenv2008 <- as.data.frame(tenv2008)
 
 
@@ -429,13 +429,15 @@ env2009_2019 <- bind_rows(env2009, env2010_2019)
 ##   - Singleton, only one baby
 #    - tipo parto? solo los que no son cesarea?
 #    - Numero embarazos? menosr que 15? Numero hijos antes? Pregunta para grupo. 
-#    -Adding cantones location infromation
-#   
-## 2. Excluding years with Invalid outcome (peso 99 nd 9999, sem gest 99)
-## 2a. Create Binary variables with outcomes. 
-# 3. Excluding years with invalid main explanatory variable (cant_res) 
+#    
+# 1.b.Create extra variables: 
+#     -Create Binary variables with outcomes.
+#     - 
+## 2. Excluding rows with Invalid outcome (peso 99 nd 9999, sem gest 99)
+##  
+# 3. Excluding rows with invalid main explanatory variable (cant_res) 
 # and cant_res international
-# 4. Excluding years with invalid covariates
+# 4. Excluding rows with invalid covariates
 # 5. filtering out unused variables
 
 
@@ -474,18 +476,44 @@ nrow(env2009_2019)
 table(env2009_2019$tipo_part)
 
 
-# Explore need of including territories not classified. Are there cases there?
+# Creating Categorical variables for SatScan (does not take numeric variables), and collapsing levels
+# - Create -> Preterm, Lbw, Parto previo, age cat
+# - Re categorize -> Etnia, nivel educacion
 
-sum((env2009_2019_GES$cant_res == "9001"| env2009_2019_GES$cant_res == "9002" | env2009_2019_GES$cant_res == "9003") 
-    & env2009_2019_GES$lbw == "1")
+env2009_2019 <- env2009_2019%>% 
+  mutate(preterm = as.factor(case_when(sem_gest >= 37 ~ "0",
+                                       sem_gest < 37 ~ "1")))  %>% 
+  mutate(edad_cat = as.factor(case_when(edad_mad < 20 ~ "1", 
+                                        edad_mad >= 20 & edad_mad < 35 ~ "2",
+                                        edad_mad >= 35 ~ "3"))) %>% 
+  mutate(niv_inst_cat = as.factor(case_when(niv_inst == 0 | niv_inst == 1 | niv_inst == 2 |niv_inst == 3| niv_inst == 4 ~ "1", 
+                                            niv_inst == 5 |niv_inst == 6 |niv_inst == 7 |niv_inst == 8 ~ "2",
+                                            niv_inst == 9 ~ "9"))) %>% 
+  mutate(par_previo = as.factor(case_when(num_par == 1  ~ "0", 
+                                          num_par > 1 & num_par < 99  ~ "1"))) %>% 
+  mutate(etnia_cat = as.factor(case_when(etnia == "1" | etnia == "2" | etnia == "4" ~ "1", 
+                                            etnia == "3"  ~ "2",
+                                            etnia == "9" ~ "9")))
+
+
 
 #Including cantones location variables INFO
 cantones_shp <- readOGR("Data/Cantones2014_INEC", "nxcantones")
+cantonesLatLong_shp <- readOGR("Data/Cantones2014_INECLatLong", "cantonesloglat")
+
+
+
 #plot(cantones_shp)
 centroidCant <- gCentroid(cantones_shp, byid = TRUE)
+centroidCantLatLong <- gCentroid(cantonesLatLong_shp, byid = TRUE)
+
 
 SpDF_centroid <- SpatialPointsDataFrame(centroidCant, cantones_shp@data)
 SpDF_centroid 
+
+SpDF_centroidLatLong <- SpatialPointsDataFrame(centroidCantLatLong, cantonesLatLong_shp@data,
+                                               proj4string = CRS("+init=epsg:4326"))
+SpDF_centroidLatLong
 
 
 CantCentr_df <- as.data.frame(SpDF_centroid)
@@ -496,6 +524,14 @@ save(CantCentr_df, file = "Data/EcuadorCantCent.RData")
 
 class(CantCentr_df$x)
 class(CantCentr_df$y)
+
+
+#Trying Lat Long, did not work
+CantCentrLatLong_df <- as.data.frame(SpDF_centroidLatLong)
+
+
+
+
 
 env2009_2019 <- env2009_2019  %>% left_join(y = CantCentr_df, by = c("cant_res" = "DPA_CANTON")) %>% 
   rename(CordXres = x, CordYres = y, Nom_CantRes = DPA_DESCAN)
@@ -513,34 +549,14 @@ env2009_2019 <- env2009_2019  %>% left_join(y = CantCentr_df, by = c("cant_res" 
 env2009_2019_LBW <- env2009_2019 %>% 
   filter(peso > 499 & peso < 6800)  %>% 
   mutate(lbw = as.factor(case_when(peso >=2500 ~ "0",
-                                   peso < 2500 ~ "1"))) %>% 
-  mutate(preterm = as.factor(case_when(sem_gest >= 37 ~ "0",
-                                       sem_gest < 37 ~ "1")))  %>% 
-  mutate(edad_cat = as.factor(case_when(edad_mad < 20 ~ "1", 
-                                        edad_mad >= 20 & edad_mad < 35 ~ "2",
-                                        edad_mad >= 35 ~ "3"))) %>% 
-  mutate(niv_inst_cat = as.factor(case_when(niv_inst == 0 | niv_inst == 1 | niv_inst == 2 |niv_inst == 3| niv_inst == 4 ~ "1", 
-                                        niv_inst == 5 |niv_inst == 6 |niv_inst == 7 |niv_inst == 8 ~ "2",
-                                        niv_inst == 9 ~ "9"))) %>% 
-  mutate(par_previo = as.factor(case_when(num_par == 1  ~ "0", 
-                                          num_par > 1 & num_par < 99  ~ "1")))
+                                   peso < 2500 ~ "1"))) 
 
 nrow(env2009_2019_LBW)
 
 env2009_2019_GES <- env2009_2019 %>% 
   filter(sem_gest <45 | sem_gest > 20) %>% 
   mutate(lbw = as.factor(case_when(peso >=2500 ~ "0",
-                                   peso < 2500 ~ "1"))) %>% 
-  mutate(preterm = as.factor(case_when(sem_gest >= 37 ~ "0",
-                                       sem_gest < 37 ~ "1"))) %>% 
-  mutate(edad_cat = as.factor(case_when(edad_mad < 20 ~ "1", 
-                                        edad_mad >= 20 & edad_mad < 35 ~ "2",
-                                        edad_mad >= 35 ~ "3"))) %>% 
-  mutate(niv_inst_cat = as.factor(case_when(niv_inst == 0 | niv_inst == 1 | niv_inst == 2 |niv_inst == 3| niv_inst == 4 ~ "1", 
-                                            niv_inst == 5 |niv_inst == 6 |niv_inst == 7 |niv_inst == 8 ~ "2",
-                                            niv_inst == 9 ~ "9"))) %>% 
-  mutate(par_previo = as.factor(case_when(num_par == 1  ~ "0", 
-                                          num_par > 1 & num_par < 99  ~ "1")))
+                                   peso < 2500 ~ "1"))) 
 
 nrow(env2009_2019_GES)
 
@@ -573,7 +589,7 @@ env2009_2019_LBW <- env2009_2019_LBW %>%
 env2009_2019_GES <- env2009_2019_GES %>% 
   filter(!is.na(niv_inst))
 
-#Numero de partos previos (DIFFERENT DATA SETS, because I loose too many)
+#Numero de partos previos (Data Only from 2013. To consider for the spatial model)
 summary(env2009_2019_GES$num_par)
 table(env2009_2019_GES$num_par)
 
@@ -583,21 +599,15 @@ table(env2009_2019_LBW$num_par)
 sum(is.na(env2009_2019_GES$num_par))
 sum(is.na(env2009_2019_LBW$num_par))
 
-env2009_2019_LBW_par <- env2009_2019_LBW %>% 
-  filter(!is.na(num_par))
-
-env2009_2019_GES_par <- env2009_2019_GES %>% 
-  filter(!is.na(num_par))
 
 ##################################################
 ####### Saving files for preparing for SATSCAN
 ##################################################
 
-#save(env2009_2019, file = "Data/env2009_2019.RData")
-#save(env2009_2019_LBW, file = "Data/env2009_2019_LBW.RData")
-#save(env2009_2019_LBW_par, file = "Data/env2009_2019_LBW_par.RData")
-#save(env2009_2019_GES, file = "Data/env2009_2019_GES.RData")
-#save(env2009_2019_GES_par, file = "Data/env2009_2019_GES_par.RData")
+save(env2009_2019, file = "Data/env2009_2019.RData")
+save(env2009_2019_LBW, file = "Data/env2009_2019_LBW.RData")
+save(env2009_2019_GES, file = "Data/env2009_2019_GES.RData")
+
 
 
 
