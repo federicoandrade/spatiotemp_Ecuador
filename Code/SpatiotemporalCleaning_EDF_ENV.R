@@ -49,30 +49,30 @@ env2008 <- read_sav("Data/ENV_2008.sav")
 ##### Checking consistency in variables and variable's names across years
 
 
-tenv2019 <- t(t(sapply(env2019, class)))
-tenv2018 <- t(t(sapply(env2018, class)))
-tenv2017 <- t(t(sapply(env2017, class)))
-tenv2016 <- t(t(sapply(env2016, class)))
-tenv2015 <- t(t(sapply(env2015, class)))
-tenv2014 <- t(t(sapply(env2014, class)))
-tenv2013 <- t(t(sapply(env2013, class)))
-tenv2012 <- t(t(sapply(env2012, class)))
-tenv2011 <- t(t(sapply(env2011, class)))
-tenv2010 <- t(t(sapply(env2010, class)))
-tenv2009 <- t(t(sapply(env2009, class)))
+#tenv2019 <- t(t(sapply(env2019, class)))
+#tenv2018 <- t(t(sapply(env2018, class)))
+#tenv2017 <- t(t(sapply(env2017, class)))
+#tenv2016 <- t(t(sapply(env2016, class)))
+#tenv2015 <- t(t(sapply(env2015, class)))
+#tenv2014 <- t(t(sapply(env2014, class)))
+#tenv2013 <- t(t(sapply(env2013, class)))
+#tenv2012 <- t(t(sapply(env2012, class)))
+#tenv2011 <- t(t(sapply(env2011, class)))
+#tenv2010 <- t(t(sapply(env2010, class)))
+#tenv2009 <- t(t(sapply(env2009, class)))
 #tenv2008 <- t(t(sapply(env2008, class)))
 
-tenv2019 <- as.data.frame(tenv2019)
-tenv2018 <- as.data.frame(tenv2018)
-tenv2017 <- as.data.frame(tenv2017)
-tenv2016 <- as.data.frame(tenv2016)
-tenv2015 <- as.data.frame(tenv2015)
-tenv2014 <- as.data.frame(tenv2014)
-tenv2013 <- as.data.frame(tenv2013)
-tenv2012 <- as.data.frame(tenv2012)
-tenv2011 <- as.data.frame(tenv2011)
-tenv2010 <- as.data.frame(tenv2010)
-tenv2009 <- as.data.frame(tenv2009)
+#tenv2019 <- as.data.frame(tenv2019)
+#tenv2018 <- as.data.frame(tenv2018)
+#tenv2017 <- as.data.frame(tenv2017)
+#tenv2016 <- as.data.frame(tenv2016)
+#tenv2015 <- as.data.frame(tenv2015)
+#tenv2014 <- as.data.frame(tenv2014)
+#tenv2013 <- as.data.frame(tenv2013)
+#tenv2012 <- as.data.frame(tenv2012)
+#tenv2011 <- as.data.frame(tenv2011)
+#tenv2010 <- as.data.frame(tenv2010)
+#tenv2009 <- as.data.frame(tenv2009)
 #tenv2008 <- as.data.frame(tenv2008)
 
 
@@ -389,7 +389,7 @@ env2009_2019_LBW <- env2009_2019 %>%
 nrow(env2009_2019_LBW)
 
 env2009_2019_GES <- env2009_2019 %>% 
-  filter(sem_gest <45 | sem_gest > 20) %>%
+  filter(sem_gest <45 & sem_gest > 20) %>%
   mutate(lbw = as.factor(case_when(peso >=2500 ~ "0",
                                    peso < 2500 ~ "1")))  
   
@@ -400,10 +400,10 @@ nrow(env2009_2019_GES)
 sum(is.na(env2009_2019_GES$cant_res))
 sum(is.na(env2009_2019_LBW$cant_res))
 
-# 4.Covariates
-tenv2009_2019 <- t(t(sapply(env2009_2019, class)))
+# 4. Potential Covariates list
+#tenv2009_2019 <- t(t(sapply(env2009_2019, class)))
 
-tenv2009_2019 <- as.data.frame(tenv2009_2019)
+#tenv2009_2019 <- as.data.frame(tenv2009_2019)
 
 # age
 sum(is.na(env2009_2019_GES$edad_mad))
@@ -452,8 +452,9 @@ sum(is.na(env2009_2019_LBW$num_par))
 ## LBW
 
 hist(env2009_2019_LBW$peso)
+hist(env2009_2019_GES$sem_gest)
 
-
+#"Birth Weight vs Year of Birth"
 env2009_2019_LBW %>% 
   mutate(anio_nac = as.factor(anio_nac)) %>% 
   mutate(peso = as.numeric(peso)) %>% 
@@ -465,6 +466,9 @@ env2009_2019_LBW %>%
   theme(plot.title = element_text(hjust = 0.5)) +
   xlab("Year of birth") +
   ylab("Birth Weight (g)")  
+
+#"Birth Weight per Province of residence"
+
 
 
 env2009_2019_LBW %>% 
@@ -479,22 +483,25 @@ env2009_2019_LBW %>%
   theme(plot.title = element_text(hjust = 0.5)) +
   xlab("Province of Residence") +
   ylab("Birth Weight (g)") + 
-  theme(axis.title.y = element_blank(), axis.text.y = element_text(size = 7), axis.title = element_text(size =10))  +
+  theme(axis.title.y = element_blank(), axis.text.y = element_text(size = 7), axis.title = element_text(size =10)) +
+  geom_hline(yintercept = mean(env2009_2019_LBW$peso), size = 0.3, colour = "red") +  
   coord_flip()
 
+#"Birth Weight per Canton"
 env2009_2019_LBW %>% 
   mutate(Nom_ProvRes = as.factor(Nom_ProvRes)) %>% 
   mutate(Nom_CantRes = as.factor(Nom_CantRes)) %>% 
   mutate(peso = as.numeric(peso)) %>% 
   ggplot(aes(x = reorder(Nom_CantRes, peso), y = peso)) +
-  stat_summary(fun.data = "mean_cl_normal", geom = "errorbar", width = 0.1)  +
-  stat_summary(fun = "mean", geom = "point", colour = "orange", size = 0.3) +
+  stat_summary(fun.data = "mean_cl_normal", geom = "errorbar", width = 0.05)  +
+  stat_summary(fun = "mean", geom = "point", colour = "orange", size = 0.4) +
   theme_bw() +
   labs(title = "Birth Weight per Canton") +
   theme(plot.title = element_text(hjust = 0.5)) +
   xlab("Cantones (n = 224)") +
   ylab("Birth Weight (g)") + 
   theme(axis.text.y = element_blank(), axis.title.x = element_text(size =10)) +
+  geom_hline(yintercept = mean(env2009_2019_LBW$peso), size = 0.3, colour = "red") + 
   coord_flip()
 
 ##### LBW por canton filtrado por algunas provincias
@@ -584,9 +591,7 @@ env2009_2019_LBW %>%
 
 #############
 ## GES
-# HERE FEb7, me frite haciendo gráficas, no he revisado las de abajo
 
-##### SOMETHING NOT WORKING HERE, do not like the values I see for sem_gest, should be filtered
 env2009_2019_GES %>% 
   mutate(anio_nac = as.factor(anio_nac)) %>% 
   mutate(sem_gest = as.numeric(sem_gest)) %>% 
@@ -613,21 +618,23 @@ env2009_2019_GES %>%
   xlab("Province of Residence") +
   ylab("Gestational age (week)") + 
   theme(axis.title.y = element_blank(), axis.text.y = element_text(size = 7), axis.title = element_text(size =10))  +
+  geom_hline(yintercept = mean(env2009_2019_GES$sem_gest), size = 0.3, colour = "red") +
   coord_flip()
 
-env2009_2019_LBW %>% 
+env2009_2019_GES %>% 
   mutate(Nom_ProvRes = as.factor(Nom_ProvRes)) %>% 
   mutate(Nom_CantRes = as.factor(Nom_CantRes)) %>% 
-  mutate(peso = as.numeric(peso)) %>% 
-  ggplot(aes(x = reorder(Nom_CantRes, peso), y = peso)) +
+  mutate(sem_gest = as.numeric(sem_gest)) %>% 
+  ggplot(aes(x = reorder(Nom_CantRes, sem_gest), y = sem_gest)) +
   stat_summary(fun.data = "mean_cl_normal", geom = "errorbar", width = 0.1)  +
   stat_summary(fun = "mean", geom = "point", colour = "orange", size = 0.3) +
   theme_bw() +
-  labs(title = "Birth Weight per Canton") +
+  labs(title = "Gestational age per Canton") +
   theme(plot.title = element_text(hjust = 0.5)) +
   xlab("Cantones (n = 224)") +
-  ylab("Birth Weight (g)") + 
+  ylab("Gestational Age (week)") + 
   theme(axis.text.y = element_blank(), axis.title.x = element_text(size =10)) +
+  geom_hline(yintercept = mean(env2009_2019_GES$sem_gest), size = 0.3, colour = "red") +
   coord_flip()
 
 
