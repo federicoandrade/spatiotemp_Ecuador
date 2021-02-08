@@ -350,8 +350,9 @@ SpDF_centroidLatLong
 
 CantCentr_df <- as.data.frame(SpDF_centroid)
 
-CantCentr_df <- CantCentr_df %>% dplyr::select(DPA_CANTON, DPA_DESCAN, x, y) 
 CantCentr_dfext <- CantCentr_df %>% dplyr::select(DPA_CANTON, DPA_DESCAN, DPA_DESPRO, x, y) 
+CantCentr_df <- CantCentr_df %>% dplyr::select(DPA_CANTON, DPA_DESCAN, x, y) 
+
 
 
 save(CantCentr_df, file = "Data/EcuadorCantCent.RData")
@@ -388,9 +389,10 @@ env2009_2019_LBW <- env2009_2019 %>%
 nrow(env2009_2019_LBW)
 
 env2009_2019_GES <- env2009_2019 %>% 
-  filter(sem_gest <45 | sem_gest > 20) %>% 
+  filter(sem_gest <45 | sem_gest > 20) %>%
   mutate(lbw = as.factor(case_when(peso >=2500 ~ "0",
-                                   peso < 2500 ~ "1"))) 
+                                   peso < 2500 ~ "1")))  
+  
 
 nrow(env2009_2019_GES)
 
@@ -446,8 +448,8 @@ sum(is.na(env2009_2019_LBW$num_par))
 ## Graphs summary statistics 
 #############################
 
-#Mean peso pear year
-
+#############
+## LBW
 
 hist(env2009_2019_LBW$peso)
 
@@ -458,7 +460,9 @@ env2009_2019_LBW %>%
   ggplot(aes(x = anio_nac, y = peso)) +
   stat_summary(fun.data = "mean_cl_normal", geom = "errorbar", width = .3)  +
   stat_summary(fun = "mean", geom = "point", colour = "orange") +
-  theme_bw(labs(title = "Birth Weigth vs Year of Birth")) +
+  theme_bw() +
+  labs(title = "Birth Weight vs Year of Birth") +
+  theme(plot.title = element_text(hjust = 0.5)) +
   xlab("Year of birth") +
   ylab("Birth Weight (g)")  
 
@@ -468,13 +472,14 @@ env2009_2019_LBW %>%
   mutate(peso = as.numeric(peso)) %>% 
   group_by(Nom_ProvRes) %>% 
   ggplot(aes(x = reorder(Nom_ProvRes, peso), y = peso)) +
-  stat_summary(fun.data = "mean_cl_normal", geom = "errorbar", width = .3)  +
-  stat_summary(fun = "mean", geom = "point", colour = "orange") +
+  stat_summary(fun.data = "mean_cl_normal", geom = "errorbar", width = .2)  +
+  stat_summary(fun = "mean", geom = "point", colour = "orange", size = 0.9) +
   theme_bw() +
+  labs(title = "Birth Weight per Province of residence") +
+  theme(plot.title = element_text(hjust = 0.5)) +
   xlab("Province of Residence") +
   ylab("Birth Weight (g)") + 
-  theme(axis.text.y = element_text(size = 7), axis.title = element_text(size =10), 
-        labs(title = ""))  +
+  theme(axis.title.y = element_blank(), axis.text.y = element_text(size = 7), axis.title = element_text(size =10))  +
   coord_flip()
 
 env2009_2019_LBW %>% 
@@ -482,13 +487,35 @@ env2009_2019_LBW %>%
   mutate(Nom_CantRes = as.factor(Nom_CantRes)) %>% 
   mutate(peso = as.numeric(peso)) %>% 
   ggplot(aes(x = reorder(Nom_CantRes, peso), y = peso)) +
-  stat_summary(fun.data = "mean_cl_normal", geom = "errorbar", width = .3)  +
-  stat_summary(fun = "mean", geom = "point", colour = "orange") +
+  stat_summary(fun.data = "mean_cl_normal", geom = "errorbar", width = 0.1)  +
+  stat_summary(fun = "mean", geom = "point", colour = "orange", size = 0.3) +
   theme_bw() +
+  labs(title = "Birth Weight per Canton") +
+  theme(plot.title = element_text(hjust = 0.5)) +
   xlab("Cantones (n = 224)") +
   ylab("Birth Weight (g)") + 
   theme(axis.text.y = element_blank(), axis.title.x = element_text(size =10)) +
   coord_flip()
+
+##### LBW por canton filtrado por algunas provincias
+
+env2009_2019_LBW %>% 
+  mutate(Nom_ProvRes = as.factor(Nom_ProvRes)) %>% 
+  mutate(Nom_CantRes = as.factor(Nom_CantRes)) %>% 
+  mutate(peso = as.numeric(peso)) %>% 
+  filter(Nom_ProvRes == "GUAYAS") %>% 
+  ggplot(aes(x = reorder(Nom_CantRes, peso), y = peso)) +
+  stat_summary(fun.data = "mean_cl_normal", geom = "errorbar", width = 0.2)  +
+  stat_summary(fun = "mean", geom = "point", colour = "orange", size = 0.9) +
+  theme_bw() +
+  labs(title = "Birth Weight per Canton (Guayas Province)") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  ylab("Birth Weight (g)") + 
+  theme(axis.text.y = element_text(size = 7), axis.title.x = element_text(size =10), 
+        axis.title.y = element_blank()) +
+  coord_flip()
+
+
 
 env2009_2019_LBW %>% 
   mutate(Nom_ProvRes = as.factor(Nom_ProvRes)) %>% 
@@ -496,12 +523,111 @@ env2009_2019_LBW %>%
   mutate(peso = as.numeric(peso)) %>% 
   filter(Nom_ProvRes == "AZUAY") %>% 
   ggplot(aes(x = reorder(Nom_CantRes, peso), y = peso)) +
+  stat_summary(fun.data = "mean_cl_normal", geom = "errorbar", width = 0.2)  +
+  stat_summary(fun = "mean", geom = "point", colour = "orange", size = 0.9) +
+  theme_bw() +
+  labs(title = "Birth Weight per Canton (Azuay Province)") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  ylab("Birth Weight (g)") + 
+  theme(axis.text.y = element_text(size = 7), axis.title.x = element_text(size =10),
+        axis.title.y = element_blank()) +
+  coord_flip()
+
+env2009_2019_LBW %>% 
+  mutate(Nom_ProvRes = as.factor(Nom_ProvRes)) %>% 
+  mutate(Nom_CantRes = as.factor(Nom_CantRes)) %>% 
+  mutate(peso = as.numeric(peso)) %>% 
+  filter(Nom_ProvRes == "EL ORO") %>% 
+  ggplot(aes(x = reorder(Nom_CantRes, peso), y = peso)) +
+  stat_summary(fun.data = "mean_cl_normal", geom = "errorbar", width = 0.2)  +
+  stat_summary(fun = "mean", geom = "point", colour = "orange", size = 0.9) +
+  theme_bw() +
+  labs(title = "Birth Weight per Canton (El Oro Province)") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  ylab("Birth Weight (g)") + 
+  theme(axis.text.y = element_text(size = 7), axis.title.x = element_text(size =10),
+        axis.title.y = element_blank()) +
+  coord_flip()
+
+env2009_2019_LBW %>% 
+  mutate(Nom_ProvRes = as.factor(Nom_ProvRes)) %>% 
+  mutate(Nom_CantRes = as.factor(Nom_CantRes)) %>% 
+  mutate(peso = as.numeric(peso)) %>% 
+  filter(Nom_ProvRes == "PICHINCHA") %>% 
+  ggplot(aes(x = reorder(Nom_CantRes, peso), y = peso)) +
+  stat_summary(fun.data = "mean_cl_normal", geom = "errorbar", width = 0.2)  +
+  stat_summary(fun = "mean", geom = "point", colour = "orange", size = 0.9) +
+  theme_bw() +
+  labs(title = "Birth Weight per Canton (Pichincha Province)") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  ylab("Birth Weight (g)") + 
+  theme(axis.text.y = element_text(size = 7), axis.title.x = element_text(size =10),
+        axis.title.y = element_blank()) +
+  coord_flip()
+
+env2009_2019_LBW %>% 
+  mutate(Nom_ProvRes = as.factor(Nom_ProvRes)) %>% 
+  mutate(Nom_CantRes = as.factor(Nom_CantRes)) %>% 
+  mutate(peso = as.numeric(peso)) %>% 
+  filter(Nom_ProvRes == "MANABI") %>% 
+  ggplot(aes(x = reorder(Nom_CantRes, peso), y = peso)) +
+  stat_summary(fun.data = "mean_cl_normal", geom = "errorbar", width = 0.2)  +
+  stat_summary(fun = "mean", geom = "point", colour = "orange", size = 0.9) +
+  theme_bw() +
+  labs(title = "Birth Weight per Canton (Manabí Province)") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  ylab("Birth Weight (g)") + 
+  theme(axis.text.y = element_text(size = 7), axis.title.x = element_text(size =10),
+        axis.title.y = element_blank()) +
+  coord_flip()
+
+
+#############
+## GES
+# HERE FEb7, me frite haciendo gráficas, no he revisado las de abajo
+
+##### SOMETHING NOT WORKING HERE, do not like the values I see for sem_gest, should be filtered
+env2009_2019_GES %>% 
+  mutate(anio_nac = as.factor(anio_nac)) %>% 
+  mutate(sem_gest = as.numeric(sem_gest)) %>% 
+  ggplot(aes(x = anio_nac, y = sem_gest)) +
   stat_summary(fun.data = "mean_cl_normal", geom = "errorbar", width = .3)  +
   stat_summary(fun = "mean", geom = "point", colour = "orange") +
   theme_bw() +
+  labs(title = "Gestational Age vs Year of Birth") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  xlab("Year of birth") +
+  ylab("Gestational Age (Weeks from last menstrual period)")  
+
+
+env2009_2019_GES %>% 
+  mutate(Nom_ProvRes = as.factor(Nom_ProvRes)) %>% 
+  mutate(sem_gest = as.numeric(sem_gest)) %>% 
+  group_by(Nom_ProvRes) %>% 
+  ggplot(aes(x = reorder(Nom_ProvRes, sem_gest), y = sem_gest)) +
+  stat_summary(fun.data = "mean_cl_normal", geom = "errorbar", width = .2)  +
+  stat_summary(fun = "mean", geom = "point", colour = "orange", size = 0.9) +
+  theme_bw() +
+  labs(title = "Gestational Age per Province of residence") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  xlab("Province of Residence") +
+  ylab("Gestational age (week)") + 
+  theme(axis.title.y = element_blank(), axis.text.y = element_text(size = 7), axis.title = element_text(size =10))  +
+  coord_flip()
+
+env2009_2019_LBW %>% 
+  mutate(Nom_ProvRes = as.factor(Nom_ProvRes)) %>% 
+  mutate(Nom_CantRes = as.factor(Nom_CantRes)) %>% 
+  mutate(peso = as.numeric(peso)) %>% 
+  ggplot(aes(x = reorder(Nom_CantRes, peso), y = peso)) +
+  stat_summary(fun.data = "mean_cl_normal", geom = "errorbar", width = 0.1)  +
+  stat_summary(fun = "mean", geom = "point", colour = "orange", size = 0.3) +
+  theme_bw() +
+  labs(title = "Birth Weight per Canton") +
+  theme(plot.title = element_text(hjust = 0.5)) +
   xlab("Cantones (n = 224)") +
   ylab("Birth Weight (g)") + 
-  theme(axis.text.y = element_text(size = 7), axis.title.x = element_text(size =10)) +
+  theme(axis.text.y = element_blank(), axis.title.x = element_text(size =10)) +
   coord_flip()
 
 
