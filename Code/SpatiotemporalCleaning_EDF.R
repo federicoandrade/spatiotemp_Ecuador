@@ -242,26 +242,75 @@ edf2010 <- edf2010 %>%
 
 ############# TO DO 2009
 
+  edf2009 <- edf2009 %>% 
+    mutate(COD_PROVINCIA = as.character(COD_PROVINCIA)) %>% 
+    mutate(COD_CANTON = as.character(COD_CANTON)) %>% 
+    mutate(COD_PARROQUIA = as.character(COD_PARROQUIA)) %>% 
+    mutate(PROVINCIA_OCURRENCIA = as.character(PROVINCIA_OCURRENCIA)) %>% 
+    mutate(CANTON_OCURRENCIA = as.character(CANTON_OCURRENCIA)) %>% 
+    mutate(PARROQUIA_OCURRENCIA = as.character(PARROQUIA_OCURRENCIA)) %>% 
+    mutate(PROVINCIA_RESIDENCIA = as.character(PROVINCIA_RESIDENCIA)) %>% 
+    mutate(CANTON_RESIDENCIA = as.character(CANTON_RESIDENCIA)) %>% 
+    mutate(PARROQUIA_RESIDENCIA = as.character(PARROQUIA_RESIDENCIA)) %>% 
+    mutate(COD_PROVINCIA = str_pad(COD_PROVINCIA, width = 2, pad = "0")) %>% 
+    mutate(COD_CANTON = str_pad(COD_CANTON, width = 2, pad = "0"))  %>% 
+    mutate(PROVINCIA_OCURRENCIA = str_pad(PROVINCIA_OCURRENCIA, width = 2, pad = "0")) %>% 
+    mutate(CANTON_OCURRENCIA = str_pad(CANTON_OCURRENCIA, width = 2, pad = "0")) %>% 
+    mutate(PROVINCIA_RESIDENCIA = str_pad(PROVINCIA_OCURRENCIA, width = 2, pad = "0")) %>% 
+    mutate(CANTON_RESIDENCIA = str_pad(CANTON_OCURRENCIA, width = 2, pad = "0"))
+    
+  
+  
+  
+  
+  edf2009 <- edf2009 %>%
+    unite("cant_res", PROVINCIA_RESIDENCIA, CANTON_RESIDENCIA, sep = "", remove = FALSE) %>%
+    unite("parr_res", PROVINCIA_RESIDENCIA, CANTON_RESIDENCIA, PARROQUIA_RESIDENCIA, sep = "", remove = FALSE) %>% 
+    unite("cant_insc", COD_PROVINCIA, COD_CANTON, sep = "", remove = FALSE) %>% 
+    unite("parr_insc", COD_PROVINCIA, COD_CANTON, COD_PARROQUIA, sep = "", remove = FALSE) %>%
+    unite("cant_fall", PROVINCIA_OCURRENCIA, CANTON_OCURRENCIA, sep = "", remove = FALSE) %>% 
+    unite("parr_fall", PROVINCIA_OCURRENCIA, CANTON_OCURRENCIA, PARROQUIA_OCURRENCIA, sep = "", remove = FALSE) %>% 
+    rename(prov_insc = COD_PROVINCIA, anio_insc = COD_ANIO, mes_insc = MES_REGISTRO, 
+           sexo = COD_SEXO, anio_fall = ANIO_OCURRENCIA, 
+           mes_fall = MES_OCURRENCIA, sem_gest = SEM_GESTACION,
+           lugar_ocur = COD_LUGAR_OCURRENCIA, asis_por = COD_ASI_POR, edad_mad = EDAD_MADRE,
+           hij_viv = NUM_HIJOS, hij_vivm = HIJOS_NAC_VIVOS_MUERTOS, hij_nacm = HIJOS_NACIDOS_MUERTOS,
+           sabe_leer = COD_LEER_ESCRIBIR, niv_inst = COD_INSTRUCCION, prov_res = PROVINCIA_RESIDENCIA, 
+           prov_fall = PROVINCIA_OCURRENCIA,
+           area_res = AREA_RESIDENCIA, causa_fetal = CAU_10AREV,
+           p_emb = COD_TIP_NACIMIENTO) %>% 
+    dplyr::select( -COD_APL_EST, -COD_SOL_INSCRIPCION, -ACT_INSCRIPCION, 
+                   -COD_CANTON, -COD_PARROQUIA,  
+                   -CANTON_RESIDENCIA, -PARROQUIA_RESIDENCIA,
+                   -COD_ATENCION_PROFESIONAL, -COD_RESIDENTE, -CANTON_OCURRENCIA, 
+                   -PARROQUIA_OCURRENCIA, -AREA_OCURRENCIA) %>% 
+    mutate(anio_insc = as.numeric(anio_insc)) %>% 
+    mutate(mes_insc = as.numeric(as.character(mes_insc))) %>% 
+    mutate(anio_fall = as.numeric(anio_fall)) %>% 
+    mutate(mes_fall = as.numeric(as.character(mes_fall))) %>% 
+    mutate(area_res = as.numeric(as.character(area_res))) %>% 
+    mutate(prov_insc = as.character(prov_insc)) %>% 
+    mutate(prov_fall = as.character(prov_fall)) %>% 
+    mutate(prov_res = as.character(prov_res))
 
 
+  edf2009_2019 <- bind_rows(edf2009, edf2010_2019)
 
-
-
+nrow(edf2010_2019) + nrow(edf2009)
+nrow(edf2009_2019)
+  
+  
 ## Verificando si hay algún caso en los territorios que no son cantón
 #9001, 9003, 9004
-sum(edf2011_2019$cant_res == "9001"| edf2011_2019$cant_res == "9002" | edf2011_2019$cant_res == "9003")
+sum(edf2009_2019$cant_res == "9001"| edf2009_2019$cant_res == "9002" | edf2009_2019$cant_res == "9003")
 
 
 
-t2011_2019 <- t(t(sapply(edf2011_2019, class)))
-t2011_2019 <- as.data.frame(t2011_2019)
-
-
-
+# EXCLUSION CRITERIA! 
 ### Solo anios fallecimiento en el rango (2009-2019)
 
-#edf2011_2019 <- edf2011_2019 %>%  
- # filter(anio_fall > 2010)
+edf2009_2019 <- edf2009_2019 %>%  
+  filter(anio_fall > 2008)
 
 
 
