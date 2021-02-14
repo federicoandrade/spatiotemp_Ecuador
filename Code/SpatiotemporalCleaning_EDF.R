@@ -51,6 +51,10 @@ t2014 <- t(t(sapply(edf2014, class)))
 t2013 <- t(t(sapply(edf2013, class)))
 t2012 <- t(t(sapply(edf2012, class)))
 t2011 <- t(t(sapply(edf2011, class)))
+t2010 <- t(t(sapply(edf2010, class)))
+t2009 <- t(t(sapply(edf2009, class)))
+
+
 
 t2019 <- as.data.frame(t2019)
 t2018 <- as.data.frame(t2018)
@@ -61,6 +65,10 @@ t2014 <- as.data.frame(t2014)
 t2013 <- as.data.frame(t2013)
 t2012 <- as.data.frame(t2012)
 t2011 <- as.data.frame(t2011)
+t2010 <- as.data.frame(t2010)
+t2009 <- as.data.frame(t2009)
+
+
 
 ######## Changing variables clasess for binding
 
@@ -179,11 +187,81 @@ edf2011$sem_gest <- as.numeric(as.character(edf2011$sem_gest))
 # variables fecha nacimiento madre
 edf2011_2019 <- bind_rows(edf2011, edf2012_2019)
 
+#### TO Change Lugar occur categories to fit 2010 (1	Establecimiento del Ministerio de Salud
+#2	Establecimiento del IESS
+#3	Otro Establecimiento del Estado
+#4	Hospital, Clinica o Consultorio Particular
+#5	Casa
+#6	Otro
+#9	Ignorado)
+
+
+edf2011_2019 <- edf2011_2019 %>% 
+mutate(lugar_ocur = as.numeric(lugar_ocur)) %>% 
+  within(lugar_ocur[lugar_ocur == 3] <- 8) %>% 
+  within(lugar_ocur[lugar_ocur == 4] <- 3) %>% 
+  within(lugar_ocur[lugar_ocur == 5] <- 4) %>% 
+  within(lugar_ocur[lugar_ocur == 6] <- 5) %>% 
+  within(lugar_ocur[lugar_ocur == 7] <- 6) %>% 
+  within(lugar_ocur[lugar_ocur == 8] <- 6)
+
+
+
+
+edf2010 <- edf2010 %>%
+  unite("cant_res", PROVINCIA_RESIDENCIA, CANTON_RESIDENCIA, sep = "", remove = FALSE) %>%
+  unite("parr_res", PROVINCIA_RESIDENCIA, CANTON_RESIDENCIA, PARROQUIA_RESIDENCIA, sep = "", remove = FALSE) %>% 
+  unite("cant_insc", COD_PROVINCIA, COD_CANTON, sep = "", remove = FALSE) %>% 
+  unite("parr_insc", COD_PROVINCIA, COD_CANTON, COD_PARROQUIA, sep = "", remove = FALSE) %>%
+  unite("cant_fall", PROVINCIA_OCURRENCIA, CANTON_OCURRENCIA, sep = "", remove = FALSE) %>% 
+  unite("parr_fall", PROVINCIA_OCURRENCIA, CANTON_OCURRENCIA, PARROQUIA_OCURRENCIA, sep = "", remove = FALSE) %>% 
+  rename(prov_insc = COD_PROVINCIA, anio_insc = COD_ANIO, mes_insc = MES_REGISTRO, 
+         sexo = COD_SEXO, anio_fall = ANIO_OCURRENCIA, 
+         mes_fall = MES_OCURRENCIA, sem_gest = SEM_GESTACION,
+         lugar_ocur = COD_LUGAR_OCURRENCIA, asis_por = COD_ASI_POR, edad_mad = EDAD_MADRE,
+         hij_viv = NUM_HIJOS, hij_vivm = HIJOS_NAC_VIVOS_MUERTOS, hij_nacm = HIJOS_NACIDOS_MUERTOS,
+         sabe_leer = COD_LEER_ESCRIBIR, niv_inst = COD_INSTRUCCION, prov_res = PROVINCIA_RESIDENCIA, 
+         prov_fall = PROVINCIA_OCURRENCIA,
+         area_res = AREA_RESIDENCIA, causa_fetal = CAU_10AREV,
+         p_emb = COD_TIP_NACIMIENTO) %>% 
+  dplyr::select( -COD_APL_EST, -COD_SOL_INSCRIPCION, -ACT_INSCRIPCION, 
+                 -COD_CANTON, -COD_PARROQUIA,  
+                 -CANTON_RESIDENCIA, -PARROQUIA_RESIDENCIA,
+                 -COD_ATENCION_PROFESIONAL, -COD_RESIDENTE, -CANTON_OCURRENCIA, 
+                 -PARROQUIA_OCURRENCIA, -AREA_OCURRENCIA) %>% 
+  mutate(anio_insc = as.numeric(anio_insc)) %>% 
+  mutate(mes_insc = as.numeric(as.character(mes_insc))) %>% 
+  mutate(anio_fall = as.numeric(anio_fall)) %>% 
+  mutate(mes_fall = as.numeric(as.character(mes_fall))) %>% 
+  mutate(area_res = as.numeric(as.character(area_res)))
+
+
+
+
+  edf2010_2019 <- bind_rows(edf2010, edf2011_2019)
+
+############# TO DO 2009
+
+
+
+
+
+
 ## Verificando si hay algún caso en los territorios que no son cantón
 #9001, 9003, 9004
 sum(edf2011_2019$cant_res == "9001"| edf2011_2019$cant_res == "9002" | edf2011_2019$cant_res == "9003")
 
-### Solo anios fallecimiento en el rango (2011-2019)
 
-edf2011_2019 <- edf2011_2019 %>%  
-  filter(anio_fall > 2010)
+
+t2011_2019 <- t(t(sapply(edf2011_2019, class)))
+t2011_2019 <- as.data.frame(t2011_2019)
+
+
+
+### Solo anios fallecimiento en el rango (2009-2019)
+
+#edf2011_2019 <- edf2011_2019 %>%  
+ # filter(anio_fall > 2010)
+
+
+

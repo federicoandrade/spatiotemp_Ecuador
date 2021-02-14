@@ -8,7 +8,6 @@ library(geosphere)
 library(rgdal)
 library(raster)
 
-#library(raster)
 #####
 #Solving conflict functions, with devtools
 #conflict_prefer("select", "dplyr")
@@ -36,7 +35,7 @@ env2012 <- read_sav("Data/ENV_2012.sav")
 env2011 <- read_sav("Data/ENV_2011.sav")
 env2010 <- read_sav("Data/ENV_2010.sav")
 env2009 <- read_sav("Data/ENV_2009.sav")
-env2008 <- read_sav("Data/ENV_2008.sav")
+#env2008 <- read_sav("Data/ENV_2008.sav")
 #env2007 <- read_sav("Data/ENV_2007.sav")
 #env2006 <- read_sav("Data/ENV_2006.sav")
 #env2005 <- read_sav("Data/ENV_2005.sav")
@@ -547,7 +546,7 @@ env2009_2019_LBW %>%
   filter(Nom_ProvRes == "EL ORO") %>% 
   ggplot(aes(x = reorder(Nom_CantRes, peso), y = peso)) +
   stat_summary(fun.data = "mean_cl_normal", geom = "errorbar", width = 0.2)  +
-  stat_summary(fun = "mean", geom = "point", colour = "orange", size = 0.9) +
+  stat_summary(fun = "mean", geom = "point", colour = "#00AFBB", size = 1.5) +
   theme_bw() +
   labs(title = "Birth Weight per Canton (El Oro Province)") +
   theme(plot.title = element_text(hjust = 0.5)) +
@@ -563,7 +562,7 @@ env2009_2019_LBW %>%
   filter(Nom_ProvRes == "PICHINCHA") %>% 
   ggplot(aes(x = reorder(Nom_CantRes, peso), y = peso)) +
   stat_summary(fun.data = "mean_cl_normal", geom = "errorbar", width = 0.2)  +
-  stat_summary(fun = "mean", geom = "point", colour = "orange", size = 0.9) +
+  stat_summary(fun = "mean", geom = "point", colour = "#52854C", size = 1.5) +
   theme_bw() +
   labs(title = "Birth Weight per Canton (Pichincha Province)") +
   theme(plot.title = element_text(hjust = 0.5)) +
