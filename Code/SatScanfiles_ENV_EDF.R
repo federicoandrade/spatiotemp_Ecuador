@@ -628,6 +628,45 @@ write.geo(Ecuador_Cantones_GEO, location = "Data/SatscanFiles", filename = "Ecua
 
 
 
+####################################################
+## For Un-adjusted clusters - Fetal death Stillbirth
+####################################################
+load("Data/env2009_2019control.RData")
+load("Data/edf2009_2019case.RData")
+load("Data/EcuadorCantCent.RData")
+
+
+
+###### Cases files
+
+edf2009_2019case <-  edf2009_2019case %>%
+  mutate(numberCases = rep(1)) %>%
+  dplyr::select(cant_res, numberCases, anio_fall)  
+
+edf2009_2019case <- as.data.frame(edf2009_2019case)
+write.cas(edf2009_2019case, location = "Data/SatscanFiles", filename = "edf2009_2019case") 
+
+###Controls file
+env2009_2019control <-  env2009_2019control %>%
+  mutate(numberCases = rep(1)) %>%
+  dplyr::select(cant_res, numberCases, anio_nac)  
+
+env2009_2019control <- as.data.frame(env2009_2019control)
+write.ctl(env2009_2019control, location = "Data/SatscanFiles", filename = "env2009_2019control")
+
+
+
+##### Geo file
+
+Ecuador_Cantones_GEO <- CantCentr_df %>% 
+  dplyr::select(DPA_CANTON, x, y) 
+
+
+Ecuador_Cantones_GEO <- as.data.frame(Ecuador_Cantones_GEO)
+
+
+
+write.geo(Ecuador_Cantones_GEO, location = "Data/SatscanFiles", filename = "Ecuador_Cantones_GEO")
 
 
 

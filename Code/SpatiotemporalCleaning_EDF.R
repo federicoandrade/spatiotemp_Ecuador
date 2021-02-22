@@ -42,36 +42,38 @@ edf2009 <- read_sav("Data/EDF_2009.sav")
 
 ##### Checking consistency in variables and variable's names across years
 
-t2019 <- t(t(sapply(edf2019, class)))
-t2018 <- t(t(sapply(edf2018, class)))
-t2017 <- t(t(sapply(edf2017, class)))
-t2016 <- t(t(sapply(edf2016, class)))
-t2015 <- t(t(sapply(edf2015, class)))
-t2014 <- t(t(sapply(edf2014, class)))
-t2013 <- t(t(sapply(edf2013, class)))
-t2012 <- t(t(sapply(edf2012, class)))
-t2011 <- t(t(sapply(edf2011, class)))
-t2010 <- t(t(sapply(edf2010, class)))
-t2009 <- t(t(sapply(edf2009, class)))
+#t2019 <- t(t(sapply(edf2019, class)))
+#t2018 <- t(t(sapply(edf2018, class)))
+#t2017 <- t(t(sapply(edf2017, class)))
+#t2016 <- t(t(sapply(edf2016, class)))
+#t2015 <- t(t(sapply(edf2015, class)))
+#t2014 <- t(t(sapply(edf2014, class)))
+#t2013 <- t(t(sapply(edf2013, class)))
+#t2012 <- t(t(sapply(edf2012, class)))
+#t2011 <- t(t(sapply(edf2011, class)))
+#t2010 <- t(t(sapply(edf2010, class)))
+#t2009 <- t(t(sapply(edf2009, class)))
 
 
 
-t2019 <- as.data.frame(t2019)
-t2018 <- as.data.frame(t2018)
-t2017 <- as.data.frame(t2017)
-t2016 <- as.data.frame(t2016)
-t2015 <- as.data.frame(t2015)
-t2014 <- as.data.frame(t2014)
-t2013 <- as.data.frame(t2013)
-t2012 <- as.data.frame(t2012)
-t2011 <- as.data.frame(t2011)
-t2010 <- as.data.frame(t2010)
-t2009 <- as.data.frame(t2009)
+#t2019 <- as.data.frame(t2019)
+#t2018 <- as.data.frame(t2018)
+#t2017 <- as.data.frame(t2017)
+#t2016 <- as.data.frame(t2016)
+#t2015 <- as.data.frame(t2015)
+#t2014 <- as.data.frame(t2014)
+#t2013 <- as.data.frame(t2013)
+#t2012 <- as.data.frame(t2012)
+#t2011 <- as.data.frame(t2011)
+#t2010 <- as.data.frame(t2010)
+#t2009 <- as.data.frame(t2009)
 
 
 
-######## Changing variables clasess for binding
+######## Changing variables clases for binding
 
+## Niv Inst in 2019 and 2018 categories need to change
+# 2019 is not ok in the catalogue, but it is ok in the data so no changes needed. 
 edf2018$fecha_insc <- as.Date(edf2018$fecha_insc)
 
 edf2018 <- edf2018 %>% 
@@ -294,7 +296,7 @@ edf2010 <- edf2010 %>%
     mutate(prov_res = as.character(prov_res))
 
 
-  edf2009_2019 <- bind_rows(edf2009, edf2010_2019)
+edf2009_2019 <- bind_rows(edf2009, edf2010_2019)
 
 nrow(edf2010_2019) + nrow(edf2009)
 nrow(edf2009_2019)
@@ -306,11 +308,132 @@ sum(edf2009_2019$cant_res == "9001"| edf2009_2019$cant_res == "9002" | edf2009_2
 
 
 
-# EXCLUSION CRITERIA! 
-### Solo anios fallecimiento en el rango (2009-2019)
+####################################################################################
+#####FILTERING 2009-2019 ONLY National residentes for the LBW clusters, and the gestational age (Separately)
+## 1.Excluding: 
+#    - Excluding years before the the time range of interest.
+##   - international residence (making cantones consistent)
+##   - Singleton, only one baby
+#    - tipo parto? solo los que no son cesarea?
+#    - Numero embarazos? menosr que 15? Numero hijos antes? Pregunta para grupo. 
+#    
+# 1.b.Create extra variables: 
+#     -Create Binary variables with outcomes.
+#     - 
+## 2. Outcome: fetal death (I could later separate from 28 weeks and below)
+##  
+# 3. Excluding rows with invalid main explanatory variable (cant_res) 
+# and cant_res international
+# 4. Excluding rows with invalid covariates
+# 5. filtering out unused variables
+
+
+
+
+#1.Solo anios fallecimiento en el rango (2009-2019)
 
 edf2009_2019 <- edf2009_2019 %>%  
   filter(anio_fall > 2008)
 
+#1. Only residents of ecuador 
+#Renaming CANTON 8800 (Exterior)
+#Haciendo consistente La concordia, antes 0808 ahora 2302 provincia 23
 
+sum(edf2009_2019$cant_res == "8800")
+sum(edf2009_2019$cant_res == "0808")
+
+edf2009_2019 <- edf2009_2019 %>% subset(cant_res != "8800") %>% 
+  mutate(prov_insc = replace(prov_insc, cant_insc == "0808", "23")) %>% 
+  mutate(prov_fall = replace(prov_fall, cant_fall == "0808", "23")) %>% 
+  mutate(prov_res = replace(prov_res, cant_res == "0808", "23")) %>%
+  within(cant_insc[cant_insc == "0808"] <- "2302") %>%
+  within(cant_fall[cant_fall == "0808"] <- "2302") %>% 
+  within(cant_res[cant_res == "0808"] <- "2302") %>% 
+  within(parr_insc[parr_insc == "080850"] <- "230250") %>% 
+  within(parr_insc[parr_insc == "080851"] <- "230251") %>% 
+  within(parr_insc[parr_insc == "080852"] <- "230252") %>% 
+  within(parr_insc[parr_insc == "080853"] <- "230253") %>% 
+  within(parr_fall[parr_fall == "080850"] <- "230250") %>% 
+  within(parr_fall[parr_fall == "080851"] <- "230251") %>% 
+  within(parr_fall[parr_fall == "080852"] <- "230252") %>% 
+  within(parr_fall[parr_fall == "080853"] <- "230253") %>% 
+  within(parr_res[parr_res == "080850"] <- "230250") %>% 
+  within(parr_res[parr_res == "080851"] <- "230251") %>% 
+  within(parr_res[parr_res == "080852"] <- "230252") %>% 
+  within(parr_res[parr_res == "080853"] <- "230253") %>% 
+  mutate(niv_inst = as.factor(niv_inst))
+
+####Adding location
+#Including cantones location variables INFO
+cantones_shp <- readOGR("Data/Cantones2014_INEC", "nxcantones")
+
+
+#plot(cantones_shp)
+centroidCant <- gCentroid(cantones_shp, byid = TRUE)
+
+SpDF_centroid <- SpatialPointsDataFrame(centroidCant, cantones_shp@data)
+SpDF_centroid 
+
+CantCentr_df <- as.data.frame(SpDF_centroid)
+
+CantCentr_dfext <- CantCentr_df %>% dplyr::select(DPA_CANTON, DPA_DESCAN, DPA_DESPRO, x, y) 
+CantCentr_df <- CantCentr_df %>% dplyr::select(DPA_CANTON, DPA_DESCAN, x, y) 
+
+save(CantCentr_df, file = "Data/EcuadorCantCent.RData")
+
+class(CantCentr_df$x)
+class(CantCentr_df$y)
+
+edf2009_2019 <- edf2009_2019  %>% left_join(y = CantCentr_dfext, by = c("cant_res" = "DPA_CANTON")) %>% 
+  rename(CordXres = x, CordYres = y, Nom_CantRes = DPA_DESCAN, Nom_ProvRes = DPA_DESPRO)
+
+
+#2. All in the data base are fetal death.... could exclude stillbirth later
+
+
+#3. Exploring cant_res
+sum(is.na(edf2009_2019$cant_res))
+
+
+# 4. Niv_inst
+table(edf2009_2019$niv_inst)
+sum(is.na(edf2009_2019$niv_inst))
+
+edf2009_2019 %>% 
+  group_by(niv_inst) %>%
+  summarise(n=n())
+
+edf2009_2019 <- edf2009_2019 %>% 
+  filter(!is.na(niv_inst)) %>% 
+  subset(niv_inst != "9")
+
+# Edad de la madre (maternal age)
+
+sum(is.na(edf2009_2019$edad_mad))
+
+edf2009_2019 <- edf2009_2019 %>% 
+  subset(edad_mad != 99)
+
+## Creating Covariates categorical variables Age and Education.
+# 3 categories for age, 4 categories for niv_inst
+
+edf2009_2019 <- edf2009_2019 %>% 
+  mutate(edad_cat = as.factor(case_when(edad_mad < 20 ~ "1", 
+                                        edad_mad >= 20 & edad_mad < 35 ~ "2",
+                                        edad_mad >= 35 ~ "3"))) %>% 
+  mutate(niv_inst_cat_st = as.factor(case_when(niv_inst == 0 | niv_inst == 1 ~ "1", 
+                                            niv_inst == 2 |niv_inst == 3 |niv_inst == 4  ~ "2",
+                                            niv_inst == 5 |niv_inst == 6  ~ "3",
+                                            niv_inst == 7 | niv_inst == 8 ~ "4",
+                                            niv_inst == 9 ~ "9")))
+
+edf2009_2019case <- edf2009_2019 
+
+##################################################
+####### Saving files for preparing for SATSCAN
+##################################################
+
+save(edf2009_2019case, file = "Data/edf2009_2019case.RData")
+#save(env2009_2019_LBW, file = "Data/env2009_2019_LBW.RData")
+#save(env2009_2019_GES, file = "Data/env2009_2019_GES.RData")
 

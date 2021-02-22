@@ -282,20 +282,79 @@ env2009_2019 <- env2009_2019 %>%
   filter(anio_nac >= 2009)
 nrow(env2009_2019)
 
-#Renaming CANTON 8800 (Exterior)
-#Haciendo consistente La concordia, antes 0808 ahora 2302 provincia 23
+#ExcludingCANTON 8800 (Exterior)
+#Haciendo consistente Canton and parroquias part of la concordia, before 0808 now 2302 Provincia 23
 
 sum(env2009_2019$cant_res == "8800")
 sum(env2009_2019$cant_res == "0808")
 # NO missing, son "8800" que significa EXTERIOR. Puedo quitarlos =)
 
+
 env2009_2019 <- env2009_2019 %>% subset(cant_res != "8800") %>% 
   mutate(prov_insc = replace(prov_insc, cant_insc == "0808", "23")) %>% 
   mutate(prov_res = replace(prov_res, cant_res == "0808", "23")) %>%
   within(cant_insc[cant_insc == "0808"] <- "2302") %>% 
-  within(cant_res[cant_res == "0808"] <- "2302") 
+  within(cant_res[cant_res == "0808"] <- "2302") %>% 
+  within(parr_insc[parr_insc == "080850"] <- "230250") %>% 
+  within(parr_insc[parr_insc == "080851"] <- "230251") %>% 
+  within(parr_insc[parr_insc == "080852"] <- "230252") %>% 
+  within(parr_insc[parr_insc == "080853"] <- "230253") %>% 
+  within(parr_res[parr_res == "080850"] <- "230250") %>% 
+  within(parr_res[parr_res == "080851"] <- "230251") %>% 
+  within(parr_res[parr_res == "080852"] <- "230252") %>% 
+  within(parr_res[parr_res == "080853"] <- "230253")
 
 nrow(env2009_2019)
+
+
+
+################################################################################
+#Saving a separate Data Base cases for Still birth. Different categories and exclusion 
+################################################################################
+env2009_2019control <- env2009_2019 %>% 
+  mutate(edad_cat = as.factor(case_when(edad_mad < 20 ~ "1", 
+                                        edad_mad >= 20 & edad_mad < 35 ~ "2",
+                                        edad_mad >= 35 ~ "3"))) %>% 
+  mutate(niv_inst_cat_st = as.factor(case_when(niv_inst == 0 | niv_inst == 1 ~ "1", 
+                                               niv_inst == 2 |niv_inst == 3 |niv_inst == 4  ~ "2",
+                                               niv_inst == 5 |niv_inst == 6  ~ "3",
+                                               niv_inst == 7 | niv_inst == 8 ~ "4",
+                                               niv_inst == 9 ~ "9")))
+
+#Including cantones location variables INFO
+cantones_shp <- readOGR("Data/Cantones2014_INEC", "nxcantones")
+
+
+
+#plot(cantones_shp)
+centroidCant <- gCentroid(cantones_shp, byid = TRUE)
+
+
+SpDF_centroid <- SpatialPointsDataFrame(centroidCant, cantones_shp@data)
+SpDF_centroid 
+
+
+
+CantCentr_df <- as.data.frame(SpDF_centroid)
+
+CantCentr_dfext <- CantCentr_df %>% dplyr::select(DPA_CANTON, DPA_DESCAN, DPA_DESPRO, x, y) 
+CantCentr_df <- CantCentr_df %>% dplyr::select(DPA_CANTON, DPA_DESCAN, x, y) 
+
+
+
+save(CantCentr_df, file = "Data/EcuadorCantCent.RData")
+
+class(CantCentr_df$x)
+class(CantCentr_df$y)
+
+env2009_2019control <- env2009_2019control  %>% left_join(y = CantCentr_dfext, by = c("cant_res" = "DPA_CANTON")) %>% 
+  rename(CordXres = x, CordYres = y, Nom_CantRes = DPA_DESCAN, Nom_ProvRes = DPA_DESPRO)
+
+
+
+save(env2009_2019control, file = "Data/env2009_2019control.RData")
+################################################################################
+
 
 #Only Singleton
 env2009_2019 <- env2009_2019 %>%
@@ -374,23 +433,25 @@ env2009_2019 <- env2009_2019  %>% left_join(y = CantCentr_dfext, by = c("cant_re
 
 
 #2 and 2a
-# 2500 cut off is based on 10th percentile from peso. 
+# 2520 cut off is based on 10th percentile from peso. 
 # 37 is based on  literature.
 #"with extreme or implausible gestational ages (<20 weeks or >45 weeks)" (Ling, 2018)
 # "or birthweights (<500 g or >6800 g)" (Ling, 2018)
 # Variable par_previo SI = 1, NO = 0
 
 env2009_2019_LBW <- env2009_2019 %>% 
-  filter(peso > 499 & peso < 6800)  %>% 
-  mutate(lbw = as.factor(case_when(peso >=2500 ~ "0",
-                                   peso < 2500 ~ "1"))) 
+  filter(peso > 499 & peso < 6800) %>% 
+  mutate(lbw = as.factor(case_when(peso >=2520 ~ "0",
+                                   peso < 2520 ~ "1"))) 
+
+quantile(env2009_2019_LBW$peso, probs = c(0,10,25,50,75,90, NA)/100)
 
 nrow(env2009_2019_LBW)
 
 env2009_2019_GES <- env2009_2019 %>% 
   filter(sem_gest <45 & sem_gest > 20) %>%
-  mutate(lbw = as.factor(case_when(peso >=2500 ~ "0",
-                                   peso < 2500 ~ "1")))  
+  mutate(lbw = as.factor(case_when(peso >=2520 ~ "0",
+                                   peso < 2520 ~ "1")))  
   
 
 nrow(env2009_2019_GES)
@@ -419,10 +480,12 @@ sum(is.na(env2009_2019_GES$niv_inst))
 sum(is.na(env2009_2019_LBW$niv_inst))
 
 env2009_2019_LBW <- env2009_2019_LBW %>% 
-  filter(!is.na(niv_inst))
+  filter(!is.na(niv_inst))  %>% 
+  subset(niv_inst != "9")
 
 env2009_2019_GES <- env2009_2019_GES %>% 
-  filter(!is.na(niv_inst))
+  filter(!is.na(niv_inst))  %>% 
+  subset(niv_inst != "9")
 
 #Numero de partos previos (Data Only from 2013. To consider for the spatial model)
 summary(env2009_2019_GES$num_par)
