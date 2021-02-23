@@ -365,7 +365,6 @@ write.geo(Ecuador_Cantones_GEO, location = "Data/SatscanFiles", filename = "Ecua
 ##################################
 ## For adjusted clusters - GES
 ################################## 
-##### Here on February 7th 2021, missing to set the satscan files for adjusted GES
 
 ###### Cases files
 
@@ -669,6 +668,34 @@ Ecuador_Cantones_GEO <- as.data.frame(Ecuador_Cantones_GEO)
 write.geo(Ecuador_Cantones_GEO, location = "Data/SatscanFiles", filename = "Ecuador_Cantones_GEO")
 
 
+
+##################################
+## For adjusted clusters - Fetal death Stillbirth
+################################## 
+
+###### Cases files
+
+edf2009_2019case <-  edf2009_2019case %>%
+  mutate(numberCases = rep(1))  
+
+edf2009_2019case <- as.data.frame(edf2009_2019case) 
+
+#Edad --> edad_mad < 20 ~ "1", edad_mad >= 20 & edad_mad < 35 ~ "2", edad_mad >= 35 ~ "3"
+
+#case_when(niv_inst == 0 | niv_inst == 1 ~ "1", 
+#          niv_inst == 2 |niv_inst == 3 |niv_inst == 4  ~ "2",
+#          niv_inst == 5 |niv_inst == 6  ~ "3",
+#          niv_inst == 7 | niv_inst == 8 ~ "4",
+#          niv_inst == 9 ~ "9"))
+
+
+#1 Cas Ed1, N1
+
+edf2009_2019case_Ed1_N1 <- edf2009_2019case  %>% 
+  filter(edad_cat == "1", niv_inst_cat == "1") %>%
+  dplyr::select(cant_res, numberCases, anio_fall)
+
+write.cas(edf2009_2019case_Ed1_N1, location = "Data/SatscanFiles", filename = "edf2009_2019case_Ed1_N1") 
 
 
 

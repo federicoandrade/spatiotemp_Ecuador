@@ -502,9 +502,9 @@ sum(is.na(env2009_2019_LBW$num_par))
 ####### Saving files for preparing for SATSCAN
 ##################################################
 
-#save(env2009_2019, file = "Data/env2009_2019.RData")
-#save(env2009_2019_LBW, file = "Data/env2009_2019_LBW.RData")
-#save(env2009_2019_GES, file = "Data/env2009_2019_GES.RData")
+save(env2009_2019, file = "Data/env2009_2019.RData")
+save(env2009_2019_LBW, file = "Data/env2009_2019_LBW.RData")
+save(env2009_2019_GES, file = "Data/env2009_2019_GES.RData")
 
 #############################
 ## Graphs summary statistics 
