@@ -315,7 +315,7 @@ env2009_2019control <- env2009_2019 %>%
   mutate(edad_cat = as.factor(case_when(edad_mad < 20 ~ "1", 
                                         edad_mad >= 20 & edad_mad < 35 ~ "2",
                                         edad_mad >= 35 ~ "3"))) %>% 
-  mutate(niv_inst_cat_st = as.factor(case_when(niv_inst == 0 | niv_inst == 1 ~ "1", 
+  mutate(niv_inst_cat = as.factor(case_when(niv_inst == 0 | niv_inst == 1 ~ "1", 
                                                niv_inst == 2 |niv_inst == 3 |niv_inst == 4  ~ "2",
                                                niv_inst == 5 |niv_inst == 6  ~ "3",
                                                niv_inst == 7 | niv_inst == 8 ~ "4",

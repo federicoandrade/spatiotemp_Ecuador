@@ -624,7 +624,8 @@ Ecuador_Cantones_GEO <- as.data.frame(Ecuador_Cantones_GEO)
 
 write.geo(Ecuador_Cantones_GEO, location = "Data/SatscanFiles", filename = "Ecuador_Cantones_GEO")
 
-
+################################################################################
+################################################################################
 
 
 ####################################################
@@ -638,20 +639,20 @@ load("Data/EcuadorCantCent.RData")
 
 ###### Cases files
 
-edf2009_2019case <-  edf2009_2019case %>%
+edf2009_2019case1 <-  edf2009_2019case %>%
   mutate(numberCases = rep(1)) %>%
   dplyr::select(cant_res, numberCases, anio_fall)  
 
-edf2009_2019case <- as.data.frame(edf2009_2019case)
-write.cas(edf2009_2019case, location = "Data/SatscanFiles", filename = "edf2009_2019case") 
+edf2009_2019case1 <- as.data.frame(edf2009_2019case1)
+write.cas(edf2009_2019case1, location = "Data/SatscanFiles", filename = "edf2009_2019case1") 
 
 ###Controls file
-env2009_2019control <-  env2009_2019control %>%
+env2009_2019control1 <-  env2009_2019control %>%
   mutate(numberCases = rep(1)) %>%
   dplyr::select(cant_res, numberCases, anio_nac)  
 
-env2009_2019control <- as.data.frame(env2009_2019control)
-write.ctl(env2009_2019control, location = "Data/SatscanFiles", filename = "env2009_2019control")
+env2009_2019control1 <- as.data.frame(env2009_2019control1)
+write.ctl(env2009_2019control1, location = "Data/SatscanFiles", filename = "env2009_2019control1")
 
 
 
@@ -676,7 +677,7 @@ write.geo(Ecuador_Cantones_GEO, location = "Data/SatscanFiles", filename = "Ecua
 ###### Cases files
 
 edf2009_2019case <-  edf2009_2019case %>%
-  mutate(numberCases = rep(1))  
+mutate(numberCases = rep(1))   
 
 edf2009_2019case <- as.data.frame(edf2009_2019case) 
 
@@ -696,6 +697,203 @@ edf2009_2019case_Ed1_N1 <- edf2009_2019case  %>%
   dplyr::select(cant_res, numberCases, anio_fall)
 
 write.cas(edf2009_2019case_Ed1_N1, location = "Data/SatscanFiles", filename = "edf2009_2019case_Ed1_N1") 
+
+#2 Cas Ed1, N2
+
+edf2009_2019case_Ed1_N2 <- edf2009_2019case  %>% 
+  filter(edad_cat == "1", niv_inst_cat == "2") %>%
+  dplyr::select(cant_res, numberCases, anio_fall)
+
+write.cas(edf2009_2019case_Ed1_N2, location = "Data/SatscanFiles", filename = "edf2009_2019case_Ed1_N2")
+
+#3 Cas Ed1, N3
+
+edf2009_2019case_Ed1_N3 <- edf2009_2019case  %>% 
+  filter(edad_cat == "1", niv_inst_cat == "3") %>%
+  dplyr::select(cant_res, numberCases, anio_fall)
+
+write.cas(edf2009_2019case_Ed1_N3, location = "Data/SatscanFiles", filename = "edf2009_2019case_Ed1_N3")
+
+#4 Cas Ed1, N4
+
+edf2009_2019case_Ed1_N4 <- edf2009_2019case  %>% 
+  filter(edad_cat == "1", niv_inst_cat == "4") %>%
+  dplyr::select(cant_res, numberCases, anio_fall)
+
+write.cas(edf2009_2019case_Ed1_N4, location = "Data/SatscanFiles", filename = "edf2009_2019case_Ed1_N4")
+
+#5 Cas Ed2, N1
+
+edf2009_2019case_Ed2_N1 <- edf2009_2019case  %>% 
+  filter(edad_cat == "2", niv_inst_cat == "1") %>%
+  dplyr::select(cant_res, numberCases, anio_fall)
+
+write.cas(edf2009_2019case_Ed2_N1, location = "Data/SatscanFiles", filename = "edf2009_2019case_Ed2_N1") 
+
+#6 Cas Ed2, N2
+
+edf2009_2019case_Ed2_N2 <- edf2009_2019case  %>% 
+  filter(edad_cat == "2", niv_inst_cat == "2") %>%
+  dplyr::select(cant_res, numberCases, anio_fall)
+
+write.cas(edf2009_2019case_Ed2_N2, location = "Data/SatscanFiles", filename = "edf2009_2019case_Ed2_N2") 
+
+#7 Cas Ed2, N3
+
+edf2009_2019case_Ed2_N3 <- edf2009_2019case  %>% 
+  filter(edad_cat == "2", niv_inst_cat == "3") %>%
+  dplyr::select(cant_res, numberCases, anio_fall)
+
+write.cas(edf2009_2019case_Ed2_N3, location = "Data/SatscanFiles", filename = "edf2009_2019case_Ed2_N3")
+
+#8 Cas Ed2, N4
+
+edf2009_2019case_Ed2_N4 <- edf2009_2019case  %>% 
+  filter(edad_cat == "2", niv_inst_cat == "4") %>%
+  dplyr::select(cant_res, numberCases, anio_fall)
+
+write.cas(edf2009_2019case_Ed2_N4, location = "Data/SatscanFiles", filename = "edf2009_2019case_Ed2_N4")
+
+#9 Cas Ed3, N1
+
+edf2009_2019case_Ed3_N1 <- edf2009_2019case  %>% 
+  filter(edad_cat == "3", niv_inst_cat == "1") %>%
+  dplyr::select(cant_res, numberCases, anio_fall)
+
+write.cas(edf2009_2019case_Ed3_N1, location = "Data/SatscanFiles", filename = "edf2009_2019case_Ed3_N1") 
+
+#10 Cas Ed3, N2
+
+edf2009_2019case_Ed3_N2 <- edf2009_2019case  %>% 
+  filter(edad_cat == "3", niv_inst_cat == "2") %>%
+  dplyr::select(cant_res, numberCases, anio_fall)
+
+write.cas(edf2009_2019case_Ed3_N2, location = "Data/SatscanFiles", filename = "edf2009_2019case_Ed3_N2")
+
+#11 Cas Ed3, N3
+
+edf2009_2019case_Ed3_N3 <- edf2009_2019case  %>% 
+  filter(edad_cat == "3", niv_inst_cat == "3") %>%
+  dplyr::select(cant_res, numberCases, anio_fall)
+
+write.cas(edf2009_2019case_Ed3_N3, location = "Data/SatscanFiles", filename = "edf2009_2019case_Ed3_N3")
+
+#12 Cas Ed3, N4
+
+edf2009_2019case_Ed3_N4 <- edf2009_2019case  %>% 
+  filter(edad_cat == "3", niv_inst_cat == "4") %>%
+  dplyr::select(cant_res, numberCases, anio_fall)
+
+write.cas(edf2009_2019case_Ed3_N4, location = "Data/SatscanFiles", filename = "edf2009_2019case_Ed3_N4")
+
+#############################################
+######### Adjusted Controls Fetal Death
+#############################################
+
+env2009_2019control <-  env2009_2019control %>%
+  mutate(numberCases = rep(1)) 
+
+env2009_2019control <- as.data.frame(env2009_2019control)
+
+
+
+#1 Control Ed1, N1
+
+edf2009_2019cont_Ed1_N1 <- env2009_2019control  %>% 
+  filter(edad_cat == "1", niv_inst_cat == "1") %>%
+  dplyr::select(cant_res, numberCases, anio_nac)
+
+write.ctl(edf2009_2019cont_Ed1_N1, location = "Data/SatscanFiles", filename = "edf2009_2019cont_Ed1_N1") 
+
+#2 Control Ed1, N2
+
+edf2009_2019cont_Ed1_N2 <- env2009_2019control  %>% 
+  filter(edad_cat == "1", niv_inst_cat == "2") %>%
+  dplyr::select(cant_res, numberCases, anio_nac)
+
+write.ctl(edf2009_2019cont_Ed1_N2, location = "Data/SatscanFiles", filename = "edf2009_2019cont_Ed1_N2") 
+
+
+
+#3 Control Ed1, N3
+
+edf2009_2019cont_Ed1_N3 <- env2009_2019control  %>% 
+  filter(edad_cat == "1", niv_inst_cat == "3") %>%
+  dplyr::select(cant_res, numberCases, anio_nac)
+
+write.ctl(edf2009_2019cont_Ed1_N3, location = "Data/SatscanFiles", filename = "edf2009_2019cont_Ed1_N3") 
+
+#4 Control Ed1, N4
+
+edf2009_2019cont_Ed1_N4 <- env2009_2019control  %>% 
+  filter(edad_cat == "1", niv_inst_cat == "4") %>%
+  dplyr::select(cant_res, numberCases, anio_nac)
+
+write.ctl(edf2009_2019cont_Ed1_N4, location = "Data/SatscanFiles", filename = "edf2009_2019cont_Ed1_N4") 
+
+#5 Control Ed2, N1
+
+edf2009_2019cont_Ed2_N1 <- env2009_2019control  %>% 
+  filter(edad_cat == "2", niv_inst_cat == "1") %>%
+  dplyr::select(cant_res, numberCases, anio_nac)
+
+write.ctl(edf2009_2019cont_Ed2_N1, location = "Data/SatscanFiles", filename = "edf2009_2019cont_Ed2_N1")
+
+#6 Control Ed2, N2
+
+edf2009_2019cont_Ed2_N2 <- env2009_2019control  %>% 
+  filter(edad_cat == "2", niv_inst_cat == "2") %>%
+  dplyr::select(cant_res, numberCases, anio_nac)
+
+write.ctl(edf2009_2019cont_Ed2_N2, location = "Data/SatscanFiles", filename = "edf2009_2019cont_Ed2_N2")
+
+#7 Control Ed2, N3
+
+edf2009_2019cont_Ed2_N3 <- env2009_2019control  %>% 
+  filter(edad_cat == "2", niv_inst_cat == "3") %>%
+  dplyr::select(cant_res, numberCases, anio_nac)
+
+write.ctl(edf2009_2019cont_Ed2_N3, location = "Data/SatscanFiles", filename = "edf2009_2019cont_Ed2_N3")
+
+#8 Control Ed2, N4
+
+edf2009_2019cont_Ed2_N4 <- env2009_2019control  %>% 
+  filter(edad_cat == "2", niv_inst_cat == "4") %>%
+  dplyr::select(cant_res, numberCases, anio_nac)
+
+write.ctl(edf2009_2019cont_Ed2_N4, location = "Data/SatscanFiles", filename = "edf2009_2019cont_Ed2_N4")
+
+#9 Control Ed3, N1
+
+edf2009_2019cont_Ed3_N1 <- env2009_2019control  %>% 
+  filter(edad_cat == "3", niv_inst_cat == "1") %>%
+  dplyr::select(cant_res, numberCases, anio_nac)
+
+write.ctl(edf2009_2019cont_Ed3_N1, location = "Data/SatscanFiles", filename = "edf2009_2019cont_Ed3_N1")
+
+#10 Control Ed3, N2
+
+edf2009_2019cont_Ed3_N2 <- env2009_2019control  %>% 
+  filter(edad_cat == "3", niv_inst_cat == "2") %>%
+  dplyr::select(cant_res, numberCases, anio_nac)
+
+write.ctl(edf2009_2019cont_Ed3_N2, location = "Data/SatscanFiles", filename = "edf2009_2019cont_Ed3_N2")
+
+#11 Control Ed3, N3
+
+edf2009_2019cont_Ed3_N3 <- env2009_2019control  %>% 
+  filter(edad_cat == "3", niv_inst_cat == "3") %>%
+  dplyr::select(cant_res, numberCases, anio_nac)
+
+write.ctl(edf2009_2019cont_Ed3_N3, location = "Data/SatscanFiles", filename = "edf2009_2019cont_Ed3_N3")
+
+#12 Control Ed3, N4
+
+edf2009_2019cont_Ed3_N4 <- env2009_2019control  %>% 
+  filter(edad_cat == "3", niv_inst_cat == "4") %>%
+  dplyr::select(cant_res, numberCases, anio_nac)
+
+write.ctl(edf2009_2019cont_Ed3_N4, location = "Data/SatscanFiles", filename = "edf2009_2019cont_Ed3_N4")
 
 
 
