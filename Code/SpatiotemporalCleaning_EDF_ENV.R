@@ -89,7 +89,7 @@ env2017_2019 <- bind_rows(env2017, env2018_2019)
 env2015_2019 <- bind_rows(env2015, env2016, env2017_2019)
 
 env2014 <- env2014 %>% 
-          dplyr::select(-tip_insc, - ofi_insc)  
+  dplyr::select(-tip_insc, - ofi_insc)  
 env2013 <- env2013 %>% 
   dplyr::select(-folio, - ofi_insc, -acta_insc, -cod_esta)  
 
@@ -152,7 +152,7 @@ env2010 <- env2010 %>%
   mutate(residente = as.numeric(as.character(residente))) %>% 
   within(etnia[etnia == "0"] <- "9") %>% 
   within(lugar_ocur[lugar_ocur == "0"] <- "9")
-  
+
 
 env2009 <- env2009 %>% 
   unite("cant_res", PRO_RES, CAN_RES, sep = "", remove = FALSE) %>%
@@ -188,29 +188,29 @@ env2009 <- env2009 %>%
   within(lugar_ocur[lugar_ocur == "0"] <- "9")
 
 #env2008 <- env2008 %>% 
- # rename(prov_insc = PROV_INS, cant_insc = CAN_INSC, parr_insc = PAR_INSC,
-  #       anio_insc = ANIO_INS, mes_insc = MES_INSC, sexo = SEXO, talla = TALLA,
-   #      peso = PESO, anio_nac = ANIO_NAC, mes_nac = MES_NACI, sem_gest = SEM_GEST,
-    #     lugar_ocur = LUG_ACAE, asis_por = ASIS_POR, prov_nac = PRO_NAC, 
-     #    cant_nac = CAN_NAC, parr_nac = PAR_NAC, area_nac = AREA_NAC, edad_mad = EDAD_MAD,
-      #   hij_viv = HIJOSVIV, hij_vivm = HVIVMUE, hij_nacm = HNACMUE,
-       #  sabe_leer = LEE, niv_inst = NIV_INST, prov_res = PRO_RES,
-        # cant_res = CAN_RES, parr_res = PAR_RES, area_res = AREA_RES, residente = RESIDENT,
-         #p_emb = TIPO_PAR) %>% 
+# rename(prov_insc = PROV_INS, cant_insc = CAN_INSC, parr_insc = PAR_INSC,
+#       anio_insc = ANIO_INS, mes_insc = MES_INSC, sexo = SEXO, talla = TALLA,
+#      peso = PESO, anio_nac = ANIO_NAC, mes_nac = MES_NACI, sem_gest = SEM_GEST,
+#     lugar_ocur = LUG_ACAE, asis_por = ASIS_POR, prov_nac = PRO_NAC, 
+#    cant_nac = CAN_NAC, parr_nac = PAR_NAC, area_nac = AREA_NAC, edad_mad = EDAD_MAD,
+#   hij_viv = HIJOSVIV, hij_vivm = HVIVMUE, hij_nacm = HNACMUE,
+#  sabe_leer = LEE, niv_inst = NIV_INST, prov_res = PRO_RES,
+# cant_res = CAN_RES, parr_res = PAR_RES, area_res = AREA_RES, residente = RESIDENT,
+#p_emb = TIPO_PAR) %>% 
 #  dplyr::select(-ESTADIST, -REG_INSC, -ACTA_INS, -OFI_INSC, -APGAR1, -APGAR2, -ATEN_MED, -DIAM_CEF, -INSCRIBE) %>% 
- # mutate(anio_insc = as.numeric(anio_insc)) %>% 
-  #mutate(mes_insc = as.numeric(as.character(mes_insc))) %>% 
-  #mutate(sexo = as.numeric(as.character(sexo))) %>% 
-  #mutate(anio_nac = as.numeric(anio_nac)) %>% 
-  #mutate(mes_nac = as.numeric(as.character(mes_nac))) %>% 
-  #mutate(p_emb = as.numeric(as.character(p_emb))) %>% 
-  #mutate(lugar_ocur = as.numeric(as.character(lugar_ocur))) %>% 
-  #mutate(asis_por = as.numeric(as.character(asis_por))) %>% 
-  #mutate(area_nac = as.numeric(as.character(area_nac))) %>% 
-  #mutate(sabe_leer = as.numeric(as.character(sabe_leer))) %>% 
-  #mutate(niv_inst = as.numeric(as.character(niv_inst))) %>% 
-  #mutate(area_res = as.numeric(as.character(area_res))) %>% 
-  #mutate(residente = as.numeric(as.character(residente)))
+# mutate(anio_insc = as.numeric(anio_insc)) %>% 
+#mutate(mes_insc = as.numeric(as.character(mes_insc))) %>% 
+#mutate(sexo = as.numeric(as.character(sexo))) %>% 
+#mutate(anio_nac = as.numeric(anio_nac)) %>% 
+#mutate(mes_nac = as.numeric(as.character(mes_nac))) %>% 
+#mutate(p_emb = as.numeric(as.character(p_emb))) %>% 
+#mutate(lugar_ocur = as.numeric(as.character(lugar_ocur))) %>% 
+#mutate(asis_por = as.numeric(as.character(asis_por))) %>% 
+#mutate(area_nac = as.numeric(as.character(area_nac))) %>% 
+#mutate(sabe_leer = as.numeric(as.character(sabe_leer))) %>% 
+#mutate(niv_inst = as.numeric(as.character(niv_inst))) %>% 
+#mutate(area_res = as.numeric(as.character(area_res))) %>% 
+#mutate(residente = as.numeric(as.character(residente)))
 
 
 env2014_2019 <- bind_rows(env2014, env2015_2019)
@@ -259,8 +259,11 @@ env2009_2019 <- bind_rows(env2009, env2010_2019)
 ##   - international residence (making cantones consistent)
 ##   - Singleton, only one baby
 #    - tipo parto? solo los que no son cesarea?
-#    - Numero embarazos? menosr que 15? Numero hijos antes? Pregunta para grupo. 
-#    
+#    - Numero embarazos? menosr que 15? Numero hijos antes? Pregunta para grupo.
+#    - Changing Paarroquia of residence codes 
+#             -Las Golondrinas (9001) --> Garcia Moreno (Llurimagua)  100352
+#             -Manga del cura (9003) --> El Carmen 130450
+#
 # 1.b.Create extra variables: 
 #     -Create Binary variables with outcomes.
 #     - 
@@ -284,10 +287,20 @@ nrow(env2009_2019)
 
 #ExcludingCANTON 8800 (Exterior)
 #Haciendo consistente Canton and parroquias part of la concordia, before 0808 now 2302 Provincia 23
+# Zonas no delimitadas ---> Changing Canton and Parroquia
 
 sum(env2009_2019$cant_res == "8800")
 sum(env2009_2019$cant_res == "0808")
 # NO missing, son "8800" que significa EXTERIOR. Puedo quitarlos =)
+
+#Parroquias ending on 99? (Parroquia no identificada)
+sum(str_detect(env2009_2019$parr_res, "99$"))
+
+#Invalid values for Parroquia of residence?
+sum(is.na(env2009_2019$parr_res))
+
+### Making Parroquias compatible in shapefile and database
+## En QGIS en el shapefile cambié los códigos para que sean iguales a INEC
 
 
 env2009_2019 <- env2009_2019 %>% subset(cant_res != "8800") %>% 
@@ -302,9 +315,34 @@ env2009_2019 <- env2009_2019 %>% subset(cant_res != "8800") %>%
   within(parr_res[parr_res == "080850"] <- "230250") %>% 
   within(parr_res[parr_res == "080851"] <- "230251") %>% 
   within(parr_res[parr_res == "080852"] <- "230252") %>% 
-  within(parr_res[parr_res == "080853"] <- "230253")
+  within(parr_res[parr_res == "080853"] <- "230253") %>% 
+  within(parr_res[parr_res == "080850"] <- "230250") %>% 
+  within(parr_res[parr_res == "080851"] <- "230251") %>% 
+  within(parr_res[parr_res == "080852"] <- "230252") %>% 
+  within(parr_res[parr_res == "080853"] <- "230253") %>% 
+  within(parr_res[parr_res == "900151"] <- "100352") %>% 
+  within(parr_res[parr_res == "900351"] <- "130450") %>% 
+  within(cant_res[cant_res == "9001"] <- "1003") %>% 
+  within(cant_res[cant_res == "9003"] <- "1304") %>% 
+  within(cant_res[cant_res == "9004"] <- "0303")
 
 nrow(env2009_2019)
+
+
+
+
+
+env_parr_check <- env2009_2019 %>% 
+  subset(cant_res == "9004" | cant_res == "0602")
+
+
+
+
+
+
+
+
+
 
 
 
@@ -316,13 +354,16 @@ env2009_2019control <- env2009_2019 %>%
                                         edad_mad >= 20 & edad_mad < 35 ~ "2",
                                         edad_mad >= 35 ~ "3"))) %>% 
   mutate(niv_inst_cat = as.factor(case_when(niv_inst == 0 | niv_inst == 1 ~ "1", 
-                                               niv_inst == 2 |niv_inst == 3 |niv_inst == 4  ~ "2",
-                                               niv_inst == 5 |niv_inst == 6  ~ "3",
-                                               niv_inst == 7 | niv_inst == 8 ~ "4",
-                                               niv_inst == 9 ~ "9")))
+                                            niv_inst == 2 |niv_inst == 3 |niv_inst == 4  ~ "2",
+                                            niv_inst == 5 |niv_inst == 6  ~ "3",
+                                            niv_inst == 7 | niv_inst == 8 ~ "4",
+                                            niv_inst == 9 ~ "9")))
 
 #Including cantones location variables INFO
-cantones_shp <- readOGR("Data/Cantones2014_INEC", "nxcantones")
+
+cantones_shp <- raster::getData('GADM',country='ECU',level=2)
+
+#cantones_shp <- readOGR("Data/Cantones2014_INEC", "nxcantones")
 
 
 
@@ -337,8 +378,8 @@ SpDF_centroid
 
 CantCentr_df <- as.data.frame(SpDF_centroid)
 
-CantCentr_dfext <- CantCentr_df %>% dplyr::select(DPA_CANTON, DPA_DESCAN, DPA_DESPRO, x, y) 
-CantCentr_df <- CantCentr_df %>% dplyr::select(DPA_CANTON, DPA_DESCAN, x, y) 
+CantCentr_dfext <- CantCentr_df %>% dplyr::select(CC_2, NAME_2, NAME_1, x, y) 
+CantCentr_df <- CantCentr_df %>% dplyr::select(CC_2, NAME_2, x, y) 
 
 
 
@@ -347,9 +388,27 @@ save(CantCentr_df, file = "Data/EcuadorCantCent.RData")
 class(CantCentr_df$x)
 class(CantCentr_df$y)
 
-env2009_2019control <- env2009_2019control  %>% left_join(y = CantCentr_dfext, by = c("cant_res" = "DPA_CANTON")) %>% 
-  rename(CordXres = x, CordYres = y, Nom_CantRes = DPA_DESCAN, Nom_ProvRes = DPA_DESPRO)
+# MARCH 4 OJO REVISAR ACA PORQUE SE AUMENTAN EL NUMERO DE FILAS AL JUNTAR! PASA ESO EN OTROS SCRIPTS?
 
+env2009_2019control <- env2009_2019control  %>% left_join(y = CantCentr_dfext, by = c("cant_res" = "CC_2")) %>% 
+  rename(Cantlong = x, Cantlat = y, Nom_CantRes = NAME_2, Nom_ProvRes = NAME_1)
+
+#Now Parroquias
+parr_shp <- readOGR("Data/ParroquiasGADM", "parroquiaGADM_edit_shp")
+#plot(parr_shp)
+
+centroidParr <- gCentroid(parr_shp, byid = TRUE)
+
+SpDF_parrcentroid <- SpatialPointsDataFrame(centroidParr, parr_shp@data)
+SpDF_parrcentroid 
+
+
+ParrCentr_df <- as.data.frame(SpDF_parrcentroid )
+
+ParrCentr_df  <- ParrCentr_df  %>% dplyr::select(CC_3, NAME_3, x, y) %>% 
+  rename(Parrlong = x, Parrlat = y, Nom_ParrRes = NAME_3)
+
+env2009_2019control <- env2009_2019control  %>% left_join(y = ParrCentr_df, by = c("parr_res" = "CC_3")) 
 
 
 save(env2009_2019control, file = "Data/env2009_2019control.RData")
@@ -382,11 +441,11 @@ env2009_2019 <- env2009_2019%>%
   mutate(par_previo = as.factor(case_when(num_par == 1  ~ "0", 
                                           num_par > 1 & num_par < 99  ~ "1"))) %>% 
   mutate(etnia_cat = as.factor(case_when(etnia == "1" | etnia == "2" | etnia == "4" ~ "1", 
-                                            etnia == "3"  ~ "2",
-                                            etnia == "9" ~ "9")))
+                                         etnia == "3"  ~ "2",
+                                         etnia == "9" ~ "9")))
 
 
-
+###MARCH 4 missing to update from EDF.... change Zonas no delimitadas, and Lat Long cantones
 #Including cantones location variables INFO
 cantones_shp <- readOGR("Data/Cantones2014_INEC", "nxcantones")
 cantonesLatLong_shp <- readOGR("Data/Cantones2014_INECLatLong", "cantonesloglat")
@@ -433,7 +492,8 @@ env2009_2019 <- env2009_2019  %>% left_join(y = CantCentr_dfext, by = c("cant_re
 
 
 #2 and 2a
-# 2520 cut off is based on 10th percentile from peso. 
+# 2520 cut off is based on 10th percentile from peso or 2500 for comparability 
+#with previous studies ... Jaacks 2019, lancet... etc
 # 37 is based on  literature.
 #"with extreme or implausible gestational ages (<20 weeks or >45 weeks)" (Ling, 2018)
 # "or birthweights (<500 g or >6800 g)" (Ling, 2018)
@@ -441,8 +501,8 @@ env2009_2019 <- env2009_2019  %>% left_join(y = CantCentr_dfext, by = c("cant_re
 
 env2009_2019_LBW <- env2009_2019 %>% 
   filter(peso > 499 & peso < 6800) %>% 
-  mutate(lbw = as.factor(case_when(peso >=2520 ~ "0",
-                                   peso < 2520 ~ "1"))) 
+  mutate(lbw = as.factor(case_when(peso >=2500 ~ "0",
+                                   peso < 2500 ~ "1"))) 
 
 quantile(env2009_2019_LBW$peso, probs = c(0,10,25,50,75,90, NA)/100)
 
@@ -450,9 +510,9 @@ nrow(env2009_2019_LBW)
 
 env2009_2019_GES <- env2009_2019 %>% 
   filter(sem_gest <45 & sem_gest > 20) %>%
-  mutate(lbw = as.factor(case_when(peso >=2520 ~ "0",
-                                   peso < 2520 ~ "1")))  
-  
+  mutate(lbw = as.factor(case_when(peso >=2500 ~ "0",
+                                   peso < 2500 ~ "1")))  
+
 
 nrow(env2009_2019_GES)
 

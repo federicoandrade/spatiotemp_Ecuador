@@ -288,6 +288,7 @@ eg_2011_2019_all <- eg2011_2019 %>%
 
 #### FEB 5/2021 Actualizacion --> Todo lo de arriba solucionado cambiando en el shapefile
 ### La Concordia de 0808 al 2302 
+#### MArzo 2021: Creo que lo de "Con GADM, dejar por fuera las golondrinas, manga del cura, y el piedrero (9001, 9003, 9004)" me lo inventé ! jejeje 
 
 
 sum(childLeuk$cant_res == "9001"| childLeuk$cant_res == "9002" | childLeuk$cant_res == "9003")

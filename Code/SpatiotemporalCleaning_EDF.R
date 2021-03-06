@@ -308,6 +308,7 @@ sum(edf2009_2019$cant_res == "9001"| edf2009_2019$cant_res == "9002" | edf2009_2
 
 
 
+
 ####################################################################################
 #####FILTERING 2009-2019 ONLY National residentes for the LBW clusters, and the gestational age (Separately)
 ## 1.Excluding: 
@@ -338,6 +339,7 @@ edf2009_2019 <- edf2009_2019 %>%
 #1. Only residents of ecuador 
 #Renaming CANTON 8800 (Exterior)
 #Haciendo consistente La concordia, antes 0808 ahora 2302 provincia 23
+# Zonas no delimitadas ---> Changing Canton and Parroquia 
 
 sum(edf2009_2019$cant_res == "8800")
 sum(edf2009_2019$cant_res == "0808")
@@ -361,31 +363,44 @@ edf2009_2019 <- edf2009_2019 %>% subset(cant_res != "8800") %>%
   within(parr_res[parr_res == "080851"] <- "230251") %>% 
   within(parr_res[parr_res == "080852"] <- "230252") %>% 
   within(parr_res[parr_res == "080853"] <- "230253") %>% 
+  within(parr_res[parr_res == "900151"] <- "100352") %>% 
+  within(parr_res[parr_res == "900351"] <- "130450") %>% 
+  within(cant_res[cant_res == "9001"] <- "1003") %>% 
+  within(cant_res[cant_res == "9003"] <- "1304") %>% 
+  within(cant_res[cant_res == "9004"] <- "0303") %>% 
   mutate(niv_inst = as.factor(niv_inst))
+
+
+sum(edf2009_2019$cant_res == "9001"| edf2009_2019$cant_res == "9003" | edf2009_2019$cant_res == "9004")
+
+
+
 
 ####Adding location
 #Including cantones location variables INFO
-cantones_shp <- readOGR("Data/Cantones2014_INEC", "nxcantones")
+cantones_shp <- readOGR("Data/CantonesGADM_editados", "cantones_GADMedit")
 
 
-#plot(cantones_shp)
 centroidCant <- gCentroid(cantones_shp, byid = TRUE)
+
 
 SpDF_centroid <- SpatialPointsDataFrame(centroidCant, cantones_shp@data)
 SpDF_centroid 
 
+
+
 CantCentr_df <- as.data.frame(SpDF_centroid)
 
-CantCentr_dfext <- CantCentr_df %>% dplyr::select(DPA_CANTON, DPA_DESCAN, DPA_DESPRO, x, y) 
-CantCentr_df <- CantCentr_df %>% dplyr::select(DPA_CANTON, DPA_DESCAN, x, y) 
+CantCentr_GADMext <- CantCentr_df %>% dplyr::select(CC_2, NAME_2, NAME_1, x, y) 
 
-save(CantCentr_df, file = "Data/EcuadorCantCent.RData")
+CantCentr_GADM <- CantCentr_df %>% dplyr::select(CC_2, NAME_2, x, y) 
 
-class(CantCentr_df$x)
-class(CantCentr_df$y)
+edf2009_2019 <- edf2009_2019  %>% left_join(y = CantCentr_GADMext, by = c("cant_res" = "CC_2"))%>% 
+  rename(Cantlong = x, Cantlat = y, Nom_CantRes = NAME_2, Nom_ProvRes = NAME_1)
 
-edf2009_2019 <- edf2009_2019  %>% left_join(y = CantCentr_dfext, by = c("cant_res" = "DPA_CANTON")) %>% 
-  rename(CordXres = x, CordYres = y, Nom_CantRes = DPA_DESCAN, Nom_ProvRes = DPA_DESPRO)
+
+
+
 
 
 #2. All in the data base are fetal death.... could exclude stillbirth later
