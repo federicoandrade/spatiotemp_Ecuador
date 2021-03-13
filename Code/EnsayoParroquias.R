@@ -178,5 +178,5 @@ edf2009_2019 <- edf2009_2019  %>% left_join(y = CantCentr_GADMext, by = c("cant_
 #####################################
 #### Definitivo Parroquias
 ####################################
-
+##Esperando la capa del INEC MArch 10
 

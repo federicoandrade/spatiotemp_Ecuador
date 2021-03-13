@@ -460,9 +460,9 @@ centroidCantLatLong <- gCentroid(cantonesLatLong_shp, byid = TRUE)
 SpDF_centroid <- SpatialPointsDataFrame(centroidCant, cantones_shp@data)
 SpDF_centroid 
 
-SpDF_centroidLatLong <- SpatialPointsDataFrame(centroidCantLatLong, cantonesLatLong_shp@data,
-                                               proj4string = CRS("+init=epsg:4326"))
-SpDF_centroidLatLong
+#SpDF_centroidLatLong <- SpatialPointsDataFrame(centroidCantLatLong, cantonesLatLong_shp@data,
+#                                               proj4string = CRS("+init=epsg:4326"))
+#SpDF_centroidLatLong
 
 
 CantCentr_df <- as.data.frame(SpDF_centroid)
@@ -476,12 +476,6 @@ save(CantCentr_df, file = "Data/EcuadorCantCent.RData")
 
 class(CantCentr_df$x)
 class(CantCentr_df$y)
-
-
-#Trying Lat Long, did not work
-CantCentrLatLong_df <- as.data.frame(SpDF_centroidLatLong)
-
-
 
 
 
@@ -541,11 +535,11 @@ sum(is.na(env2009_2019_LBW$niv_inst))
 
 env2009_2019_LBW <- env2009_2019_LBW %>% 
   filter(!is.na(niv_inst))  %>% 
-  subset(niv_inst != "9")
+  subset(niv_inst != 9)
 
 env2009_2019_GES <- env2009_2019_GES %>% 
   filter(!is.na(niv_inst))  %>% 
-  subset(niv_inst != "9")
+  subset(niv_inst != 9)
 
 #Numero de partos previos (Data Only from 2013. To consider for the spatial model)
 summary(env2009_2019_GES$num_par)
